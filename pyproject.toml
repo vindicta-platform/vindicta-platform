@@ -10,9 +10,9 @@ dependencies = [
 ]
 
 [tool.uv.sources]
-vindicta-foundation = { path = "vindicta-foundation", editable = true }
-vindicta-engine = { path = "vindicta-engine", editable = true }
-warscribe-system = { path = "warscribe-system", editable = true }
+vindicta-foundation = { workspace = true }
+vindicta-engine = { workspace = true }
+warscribe-system = { workspace = true }
 
 [tool.uv.workspace]
 members = ["vindicta-foundation", "vindicta-engine", "warscribe-system"]
