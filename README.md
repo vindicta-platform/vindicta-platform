@@ -34,13 +34,17 @@ vindicta-platform/
 
 ## Submodules
 
-| Domain | Submodule | Package |
-|:-------|:----------|:--------|
+| Domain     | Submodule              | Package               |
+| :--------- | :--------------------- | :-------------------- |
 | Foundation | `vindicta-foundation/` | `vindicta_foundation` |
-| Engine | `vindicta-engine/` | `vindicta_engine` |
-| Scribe | `warscribe-system/` | `warscribe` |
+| Engine     | `vindicta-engine/`     | `vindicta_engine`     |
+| Scribe     | `warscribe-system/`    | `warscribe`           |
 
 All submodules are wired as editable `uv` workspace members — changes to any submodule are immediately reflected.
+
+## Documentation
+
+> **📌 Important:** All architectural decisions, shared models, and the project Constitution live in [**vindicta-foundation**](https://github.com/vindicta-platform/vindicta-foundation).
 
 ## Prerequisites
 
@@ -50,3 +54,4 @@ All submodules are wired as editable `uv` workspace members — changes to any s
 ---
 
 *Built with 🎲 by the Vindicta Team*
+
