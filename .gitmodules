@@ -1,0 +1,11 @@
+[submodule "vindicta-foundation"]
+	path = vindicta-foundation
+	url = https://github.com/vindicta-platform/vindicta-foundation.git
+
+[submodule "vindicta-engine"]
+	path = vindicta-engine
+	url = https://github.com/vindicta-platform/vindicta-engine.git
+
+[submodule "warscribe-system"]
+	path = warscribe-system
+	url = https://github.com/vindicta-platform/warscribe-system.git
