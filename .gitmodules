@@ -9,3 +9,12 @@
 [submodule "warscribe-system"]
 	path = warscribe-system
 	url = https://github.com/vindicta-platform/warscribe-system.git
+[submodule "vindicta-economy"]
+	path = vindicta-economy
+	url = https://github.com/vindicta-platform/vindicta-economy.git
+[submodule "vindicta-oracle"]
+	path = vindicta-oracle
+	url = https://github.com/vindicta-platform/vindicta-oracle.git
+[submodule "Vindicta-Agents"]
+	path = Vindicta-Agents
+	url = https://github.com/vindicta-platform/Vindicta-Agents.git
