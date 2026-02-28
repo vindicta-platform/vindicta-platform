@@ -22,3 +22,6 @@ Thumbs.db
 
 # uv
 uv.lock
+
+# Agent tooling
+.agent/
