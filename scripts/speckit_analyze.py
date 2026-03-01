@@ -6,10 +6,11 @@ import ollama
 
 logging.basicConfig(level=logging.INFO)
 
+
 def main():
     repo_name = os.environ.get("GITHUB_REPOSITORY")
     github_token = os.environ.get("GITHUB_TOKEN")
-    
+
     if not github_token or not repo_name:
         logging.error("Missing GITHUB_REPOSITORY or GITHUB_TOKEN.")
         return
@@ -51,16 +52,16 @@ Context:
             model="phi3",
             messages=[{"role": "user", "content": prompt}],
             format="json",
-            options={"temperature": 0.0}
+            options={"temperature": 0.0},
         )
-        content = response['message']['content'].strip()
-        
+        content = response["message"]["content"].strip()
+
         try:
             issues = json.loads(content)
         except json.JSONDecodeError:
             logging.error(f"Failed to parse JSON response. Response was: {content}")
             return
-            
+
         if not isinstance(issues, list):
             logging.error(f"JSON response is not a list. Response was: {content}")
             return
@@ -68,25 +69,27 @@ Context:
         if len(issues) == 0:
             logging.info("No drift detected.")
             return
-            
+
         logging.info(f"Found {len(issues)} drift issues.")
-        
+
         g = Github(github_token)
         repo = g.get_repo(repo_name)
-        
+
         for issue in issues:
             title = issue.get("title", "Detected Specification Drift")
-            body = issue.get("body", "Drift was detected by local speckit analysis, but no details were provided.")
-            
+            body = issue.get(
+                "body",
+                "Drift was detected by local speckit analysis, but no details were provided.",
+            )
+
             repo.create_issue(
-                title=title,
-                body=body,
-                labels=["quality", "speckit.analyze"]
+                title=title, body=body, labels=["quality", "speckit.analyze"]
             )
             logging.info(f"Created issue: {title}")
-            
+
     except Exception as e:
         logging.error(f"Error during analysis: {e}")
+
 
 if __name__ == "__main__":
     main()

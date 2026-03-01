@@ -30,6 +30,9 @@ warscribe-system = { workspace = true }
 [dependency-groups]
 dev = [
     "mkdocs-monorepo-plugin>=1.1.2",
+    "mypy>=1.19.1",
+    "pytest>=9.0.2",
+    "ruff>=0.15.4",
 ]
 
 [tool.pytest.ini_options]
@@ -48,6 +51,8 @@ ignore = ["D105"]
 "packages/warscribe-system/tests/**/*.py" = ["D"]
 "tests/**/*.py" = ["D"]
 "features/**/*.py" = ["D", "E501", "F811"]
+"**/features/**/*.py" = ["F811"]
+"**/features/steps/*.py" = ["D", "F811"]
 [tool.mypy]
 ignore_missing_imports = true
 explicit_package_bases = true
