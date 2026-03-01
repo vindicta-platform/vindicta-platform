@@ -32,3 +32,26 @@ pytest_cache/
 # site
 /site
 /site-packages
+node_modules/
+env/
+.env/
+vendor/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+bower_components/
+jspm_packages/
+.cache/
+*.pyc
+*.pyo
+*.pyd
+*.o
+*.obj
+*.dll
+*.exe
+*.so
+*.a
+*.lib
+*.class
+*.jar
+*.log
