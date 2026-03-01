@@ -1,0 +1,14 @@
+# Vindicta Engine Documentation
+
+Welcome to the **Vindicta Engine** documentation — the physics, dice, and AI core for the Vindicta Platform.
+
+## Modules
+
+- **Dice Engine**: CSPRNG-powered dice rolling with full statistical modeling.
+- **Entropy Buffer**: Thread-safe buffered entropy for reliable RNG.
+- **Primordia AI**: Deterministic tactical AI engine.
+
+## Links
+
+- [GitHub Repository](https://github.com/vindicta-platform/vindicta-engine)
+- [Foundation & Standards](https://github.com/vindicta-platform/vindicta-foundation)

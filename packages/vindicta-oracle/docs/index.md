@@ -1,0 +1,13 @@
+# Vindicta Oracle Documentation
+
+Welcome to the **Vindicta Oracle** documentation — meta analysis, predictions, and the AI debate council for the Vindicta Platform.
+
+## Modules
+
+- **Meta-Seer**: Faction meta analysis and heuristic evaluation.
+- **Arbiter Council**: Multi-model AI debate and consensus engine.
+
+## Links
+
+- [GitHub Repository](https://github.com/vindicta-platform/vindicta-oracle)
+- [Foundation & Standards](https://github.com/vindicta-platform/vindicta-foundation)

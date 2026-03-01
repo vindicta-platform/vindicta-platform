@@ -1,0 +1,9 @@
+{
+    "name": "Vindicta CI Debug",
+    "image": "mcr.microsoft.com/devcontainers/python:1-3.12-bookworm",
+    "containerEnv": {
+        "UV_LINK_MODE": "copy",
+        "CI": "true"
+    },
+    "postCreateCommand": "pipx install uv && uv sync --all-extras && uv run pre-commit install"
+}

@@ -1,0 +1,89 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.13.6, pytest-9.0.2, pluggy-1.6.0
+rootdir: C:\Users\bfoxt\vindicta-platform\Vindicta-Agents
+configfile: pyproject.toml
+plugins: anyio-4.12.1, langsmith-0.7.1, asyncio-1.3.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 53 items
+
+<Dir Vindicta-Agents>
+  <Dir tests>
+    <Dir unit>
+      <Module test_async_nexus.py>
+        <Coroutine test_async_boot_sequence>
+        <Coroutine test_json_rpc_envelope_validation>
+      <Module test_axioms.py>
+        <Function test_entity_identity_valid>
+        <Function test_dimensionality_valid>
+        <Function test_dimensionality_negative_coordinates>
+        <Function test_dimensionality_out_of_bounds>
+        <Function test_probability_source>
+        <Function test_temporal_discretization>
+      <Module test_base_agent.py>
+        <Function test_base_agent_initialization>
+        <Function test_base_agent_missing_realm>
+        <Function test_handshake>
+      <Module test_base_agent_socket.py>
+        <Coroutine test_agent_connect_success>
+        <Coroutine test_agent_connect_failure>
+        <Coroutine test_agent_send_envelope>
+      <Module test_discovery.py>
+        <Function test_find_meso_repos_success>
+        <Function test_find_meso_repos_missing>
+      <Module test_middleware.py>
+        <Function test_validate_intent_valid>
+        <Function test_validate_intent_invalid_coords>
+      <Module test_nexus.py>
+        <Function test_websocket_connection>
+        <Function test_malformed_envelope>
+        <Function test_registry_tracking>
+      <Module test_nexus_models.py>
+        <Class TestWARScribeEnvelope>
+          <Function test_valid_envelope>
+          <Function test_custom_receiver>
+          <Function test_envelope_with_payload>
+          <Function test_envelope_missing_required_fields>
+        <Class TestAgentRegistry>
+          <Function test_initial_state>
+          <Function test_disconnect_nonexistent_agent>
+        <Class TestNexusClient>
+          <Function test_client_creation>
+          <Function test_default_url>
+          <Coroutine test_report_activation>
+          <Coroutine test_report_completion>
+          <Coroutine test_report_error>
+      <Module test_shared_memory.py>
+        <Function test_shared_memory_singleton>
+        <Function test_board_state_update>
+        <Function test_unit_update>
+      <Module test_supervisor.py>
+        <Function test_supervisor_singleton>
+        <Function test_interaction_with_shared_memory>
+        <Function test_valid_move>
+        <Function test_invalid_move_out_of_bounds>
+      <Module test_swarm_logic.py>
+        <Class TestMetaGraphNodes>
+          <Function test_product_owner_node>
+          <Function test_architect_node>
+          <Function test_adl_node>
+          <Function test_custom_provider_injected>
+        <Class TestDomainGraphNodes>
+          <Function test_setup_execution_node>
+          <Function test_tech_priest_activation>
+          <Function test_logos_historian_activation>
+          <Function test_void_banker_activation>
+          <Function test_domain_node_with_supervisor>
+          <Function test_domain_node_without_supervisor>
+        <Class TestTaskRouter>
+          <Function test_routes_to_tech_priest>
+          <Function test_routes_to_multiple_nodes>
+          <Function test_no_pending_tasks_returns_end>
+          <Function test_empty_tasks_returns_end>
+
+============================== warnings summary ===============================
+.venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: 21 warnings
+  C:\Users\bfoxt\vindicta-platform\Vindicta-Agents\.venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+========================= 53 tests collected in 0.29s =========================

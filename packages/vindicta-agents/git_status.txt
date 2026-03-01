@@ -1,0 +1,49 @@
+﻿interactive rebase in progress; onto 1d222c9
+Last command done (1 command done):
+   pick a48e51a feat: implement autonomous swarm workflow (Phases 1-5)
+No commands remaining.
+You are currently rebasing branch 'feat/autonomous-swarm-workflow' on '1d222c9'.
+  (fix conflicts and then run "git rebase --continue")
+  (use "git rebase --skip" to skip this patch)
+  (use "git rebase --abort" to check out the original branch)
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	new file:   features/autonomous_workflow.feature
+	new file:   features/review_gates.feature
+	new file:   features/spec_queue.feature
+	new file:   features/tools.feature
+	modified:   pyproject.toml
+	new file:   scripts/run_swarm.py
+	new file:   src/vindicta_agents/simulation/sdd_scenarios.py
+	new file:   src/vindicta_agents/swarm/prompts.py
+	new file:   src/vindicta_agents/swarm/review_gates.py
+	new file:   src/vindicta_agents/swarm/spec_queue.py
+	modified:   src/vindicta_agents/swarm/state.py
+	new file:   src/vindicta_agents/tools/file_ops.py
+	new file:   src/vindicta_agents/tools/git_ops.py
+	new file:   src/vindicta_agents/tools/github_ops.py
+	new file:   src/vindicta_agents/tools/llm_ops.py
+	new file:   src/vindicta_agents/ui/chainlit_app.py
+	new file:   tests/integration/__init__.py
+	new file:   tests/integration/test_e2e_pipeline.py
+	new file:   tests/mocks/__init__.py
+	new file:   tests/mocks/mock_tools.py
+	new file:   tests/unit/swarm/__init__.py
+	new file:   tests/unit/swarm/test_agent_nodes.py
+	new file:   tests/unit/swarm/test_review_gates.py
+	new file:   tests/unit/swarm/test_spec_queue.py
+	new file:   tests/unit/tools/__init__.py
+	new file:   tests/unit/tools/test_tools.py
+	new file:   tests_err.txt
+	new file:   tests_output.txt
+	new file:   tests_output_utf8.txt
+	modified:   uv.lock
+
+Unmerged paths:
+  (use "git restore --staged <file>..." to unstage)
+  (use "git add <file>..." to mark resolution)
+	both modified:   src/vindicta_agents/swarm/config.py
+	both modified:   src/vindicta_agents/swarm/domain_graph.py
+	both modified:   src/vindicta_agents/swarm/meta_graph.py
+	both added:      src/vindicta_agents/tools/__init__.py

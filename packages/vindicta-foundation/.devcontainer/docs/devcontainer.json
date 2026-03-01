@@ -1,0 +1,19 @@
+{
+    "name": "Vindicta Docs Environment",
+    "image": "mcr.microsoft.com/devcontainers/python:1-3.12-bookworm",
+    "containerEnv": {
+        "UV_LINK_MODE": "copy"
+    },
+    "postCreateCommand": "pipx install uv && uv sync --all-extras",
+    "forwardPorts": [
+        8000
+    ],
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "yzhang.markdown-all-in-one",
+                "DavidAnson.vscode-markdownlint"
+            ]
+        }
+    }
+}

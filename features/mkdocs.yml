@@ -1,0 +1,8 @@
+site_name: Feature Tests
+site_description: Global BDD Feature Specifications
+site_author: Vindicta Platform Contributors
+
+docs_dir: .
+
+nav:
+  - Welcome: index.md

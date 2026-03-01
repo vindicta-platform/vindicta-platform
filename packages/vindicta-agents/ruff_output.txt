@@ -1,0 +1,50 @@
+﻿src\vindicta_agents\core\base_agent.py:1:33: F401 [*] `pydantic.Field` imported but unused
+src\vindicta_agents\core\base_agent.py:4:18: F401 [*] `uuid.UUID` imported but unused
+src\vindicta_agents\core\base_agent.py:4:24: F401 [*] `uuid.uuid4` imported but unused
+src\vindicta_agents\core\middleware.py:3:63: F401 [*] `vindicta_agents.foundation.axioms.EntityIdentity` imported but unused
+src\vindicta_agents\foundation\axioms.py:4:57: F401 [*] `pydantic.ValidationError` imported but unused
+src\vindicta_agents\governor\resource_manager.py:1:8: F401 [*] `asyncio` imported but unused
+src\vindicta_agents\governor\resource_manager.py:2:26: F401 [*] `typing.List` imported but unused
+src\vindicta_agents\governor\resource_manager.py:2:32: F401 [*] `typing.Optional` imported but unused
+src\vindicta_agents\governor\resource_manager.py:3:22: F401 [*] `datetime.datetime` imported but unused
+src\vindicta_agents\governor\resource_manager.py:5:32: F401 [*] `..telemetry.models.HardwareState` imported but unused
+src\vindicta_agents\shared\memory.py:1:31: F401 [*] `typing.Optional` imported but unused
+src\vindicta_agents\simulation\scenarios.py:2:37: F401 [*] `typing.Optional` imported but unused
+src\vindicta_agents\simulation\shadow_nexus.py:1:8: F401 [*] `asyncio` imported but unused
+src\vindicta_agents\simulation\shadow_nexus.py:3:8: F401 [*] `json` imported but unused
+src\vindicta_agents\simulation\shadow_nexus.py:4:31: F401 [*] `typing.List` imported but unused
+src\vindicta_agents\simulation\shadow_nexus.py:5:87: F401 [*] `vindicta_agents.supervisor.gatekeeper.ConstitutionalHalt` imported but unused
+src\vindicta_agents\simulation\shadow_nexus.py:7:60: F401 [*] `vindicta_agents.simulation.scenarios.ScenarioAction` imported but unused
+src\vindicta_agents\supervisor\gatekeeper.py:3:63: F401 [*] `vindicta_agents.foundation.axioms.TemporalDiscretization` imported but unused
+src\vindicta_agents\supervisor\gatekeeper.py:6:8: F401 [*] `uuid` imported but unused
+src\vindicta_agents\supervisor\gatekeeper.py:47:9: F841 Local variable `current_state` is assigned to but never used
+src\vindicta_agents\supervisor\gatekeeper.py:52:14: F841 Local variable `action_type` is assigned to but never used
+src\vindicta_agents\swarm\config.py:22:65: F401 [*] `typing.List` imported but unused
+src\vindicta_agents\swarm\config.py:22:71: F401 [*] `typing.Dict` imported but unused
+src\vindicta_agents\swarm\config.py:183:39: E701 Multiple statements on one line (colon)
+src\vindicta_agents\swarm\config.py:184:38: E701 Multiple statements on one line (colon)
+src\vindicta_agents\swarm\domain_graph.py:12:8: F401 [*] `functools` imported but unused
+src\vindicta_agents\swarm\domain_graph.py:15:8: F401 [*] `pathlib` imported but unused
+src\vindicta_agents\swarm\meta_graph.py:15:31: F401 [*] `typing.List` imported but unused
+src\vindicta_agents\swarm\meta_graph.py:24:40: F401 [*] `.spec_queue.SpecQueue` imported but unused
+src\vindicta_agents\swarm\review_gates.py:20:30: F401 [*] `typing.Optional` imported but unused
+src\vindicta_agents\swarm_startup.py:11:8: F401 [*] `sys` imported but unused
+src\vindicta_agents\telemetry\models.py:2:26: F401 [*] `typing.Optional` imported but unused
+src\vindicta_agents\tools\__init__.py:15:5: F401 `.git_tools.run_cmd` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
+src\vindicta_agents\tools\__init__.py:16:5: F401 `.git_tools.verify_repo_clean` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
+src\vindicta_agents\tools\__init__.py:17:5: F401 `.git_tools.checkout_new_branch` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
+src\vindicta_agents\tools\__init__.py:18:5: F401 `.git_tools.commit_files` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
+src\vindicta_agents\tools\__init__.py:19:5: F401 `.git_tools.push_branch` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
+src\vindicta_agents\tools\__init__.py:20:5: F401 `.git_tools.create_pr` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
+src\vindicta_agents\tools\__init__.py:21:5: F401 `.git_tools.write_file` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
+src\vindicta_agents\tools\file_ops.py:10:8: F401 [*] `os` imported but unused
+src\vindicta_agents\tools\git_tools.py:10:8: F401 [*] `uuid` imported but unused
+src\vindicta_agents\tools\git_tools.py:11:26: F401 [*] `typing.Optional` imported but unused
+src\vindicta_agents\tools\git_tools.py:11:36: F401 [*] `typing.Tuple` imported but unused
+src\vindicta_agents\tools\github_ops.py:89:46: E741 Ambiguous variable name: `l`
+src\vindicta_agents\tools\llm_ops.py:91:28: E741 Ambiguous variable name: `l`
+src\vindicta_agents\ui\chainlit_app.py:16:8: F401 [*] `os` imported but unused
+src\vindicta_agents\utils\discovery.py:3:26: F401 [*] `typing.List` imported but unused
+src\vindicta_agents\utils\logger.py:6:8: F401 [*] `os` imported but unused
+Found 48 errors.
+[*] 35 fixable with the `--fix` option (2 hidden fixes can be enabled with the `--unsafe-fixes` option).

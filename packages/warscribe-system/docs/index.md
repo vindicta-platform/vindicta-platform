@@ -1,0 +1,14 @@
+# WARScribe System Documentation
+
+Welcome to the **WARScribe System** documentation — notation, parsing, and transcript reconstruction for the Vindicta Platform.
+
+## Modules
+
+- **WARScribe Core**: Core notation models and domain logic.
+- **WARScribe Parser**: Standalone parser for the Wargame Notation System (WNS).
+- **Transcript Toolkit**: Tools for battle transcript handling and replay.
+
+## Links
+
+- [GitHub Repository](https://github.com/vindicta-platform/warscribe-system)
+- [WARScribe Whitepaper](https://github.com/vindicta-platform/vindicta-foundation/blob/main/docs/concepts/warscribe-whitepaper.md)

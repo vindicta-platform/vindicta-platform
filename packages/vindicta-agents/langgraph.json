@@ -1,0 +1,9 @@
+{
+    "dependencies": [
+        "."
+    ],
+    "graphs": {
+        "vindicta_swarm": "vindicta_agents.swarm.nexus:vindicta_swarm"
+    },
+    "env": ".env"
+}

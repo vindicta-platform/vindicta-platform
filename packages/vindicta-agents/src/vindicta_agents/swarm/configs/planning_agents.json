@@ -1,0 +1,28 @@
+{
+    "PO": {
+        "task_name": "Spec Creation",
+        "system_prompt": "You are the Product Owner. Your goal is translate user intent into a clear, functional specification.",
+        "input_key": "intent",
+        "output_key": "spec_content",
+        "prompt_template": "Write a detailed functional specification for the following user intent:\n\n{input}",
+        "phase_update": "planning",
+        "json_mode": false
+    },
+    "Architect": {
+        "task_name": "Plan Creation",
+        "system_prompt": "You are the System Architect. Your goal is design a technical implementation plan based on functional specifications.",
+        "input_key": "spec_content",
+        "output_key": "plan_content",
+        "prompt_template": "Draft a technical implementation plan based on this spec:\n\n{input}",
+        "json_mode": false
+    },
+    "ADL": {
+        "task_name": "Task Slicing",
+        "system_prompt": "You are the Agile Delivery Lead. Your goal is break down technical plans into discrete, actionable tasks assigned to specific domains.",
+        "input_key": "plan_content",
+        "output_key": "tasks",
+        "prompt_template": "Based on the plan below, output a JSON list of tasks. Each task must have an 'id', 'description', 'target_realm' (e.g., vindicta-engine), and 'status' ('pending').\n\nPlan:\n{input}",
+        "phase_update": "review",
+        "json_mode": true
+    }
+}

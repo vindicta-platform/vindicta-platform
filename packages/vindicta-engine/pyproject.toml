@@ -1,0 +1,65 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vindicta-engine"
+version = "0.1.0"
+description = "Physics, Dice, and AI Core for the Vindicta Platform"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "vindicta-foundation",
+    "numpy>=1.26.0",
+    "langgraph>=1.0.8",
+    "behave>=1.3.3",
+    "structlog>=25.5.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "mypy>=1.0.0",
+    "ruff>=0.1.0",
+    "pytest>=8.0.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.uv.sources]
+vindicta-foundation = { workspace = true }
+
+[tool.mypy]
+strict = true
+python_version = "3.12"
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "D"]
+ignore = ["D100", "D104"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+addopts = "--cov=vindicta_engine --cov-report=term-missing"
+
+[dependency-groups]
+dev = [
+    "pytest-sugar>=1.1.1",
+    "pytest-cov>=6.0.0",
+    "behave>=1.2.6",
+    "pytest-xdist>=3.5.0",
+]
+
+[tool.coverage.run]
+source = ["src/vindicta_engine"]
+omit = ["tests/*"]
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true

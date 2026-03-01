@@ -1,0 +1,14 @@
+# Vindicta Economy Documentation
+
+Welcome to the **Vindicta Economy** documentation — ledger, quotas, and gas tank for the Vindicta Platform.
+
+## Modules
+
+- **Atomic Ledger**: Immutable transaction history for platform credits.
+- **Gas Tank**: Predictive billing and quota management.
+- **Governor**: Resource policies and quota enforcement.
+
+## Links
+
+- [GitHub Repository](https://github.com/vindicta-platform/vindicta-economy)
+- [Foundation & Standards](https://github.com/vindicta-platform/vindicta-foundation)

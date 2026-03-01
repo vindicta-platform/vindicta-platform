@@ -1,0 +1,39 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.13.6, pytest-9.0.2, pluggy-1.6.0 -- C:\Users\bfoxt\vindicta-platform\Vindicta-Agents\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\bfoxt\vindicta-platform\Vindicta-Agents
+configfile: pyproject.toml
+plugins: anyio-4.12.1, langsmith-0.7.1, asyncio-1.3.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 1 item
+
+tests/unit/test_swarm_logic.py::TestMetaGraphNodes::test_adl_node FAILED [100%]
+
+================================== FAILURES ===================================
+______________________ TestMetaGraphNodes.test_adl_node _______________________
+
+self = <test_swarm_logic.TestMetaGraphNodes object at 0x000001E046E3BA80>
+
+    def test_adl_node(self):
+        state = {"plan_content": "Test Plan"}
+        result = adl_node(state, DEFAULT_CONFIG)
+        assert result["current_phase"] == "review"
+        assert "tasks" in result
+>       assert len(result["tasks"]) == 3
+E       AssertionError: assert 1 == 3
+E        +  where 1 = len([{'description': 'Mock Task', 'id': 'mock-task-1', 'status': 'pending'}])
+
+tests\unit\test_swarm_logic.py:36: AssertionError
+============================== warnings summary ===============================
+.venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: 21 warnings
+  C:\Users\bfoxt\vindicta-platform\Vindicta-Agents\.venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+tests/unit/test_swarm_logic.py::TestMetaGraphNodes::test_adl_node
+  C:\Users\bfoxt\vindicta-platform\Vindicta-Agents\.venv\Lib\site-packages\pydantic\main.py:250: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/unit/test_swarm_logic.py::TestMetaGraphNodes::test_adl_node - As...
+======================= 1 failed, 22 warnings in 0.23s ========================

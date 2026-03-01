@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "warscribe-system"
+version = "0.1.0"
+description = "Unified Scribe System: Action Notation, Parsing, and Game State Reconstruction"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "vindicta-foundation",
+    "pydantic>=2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "mypy>=1.0.0",
+    "ruff>=0.1.0",
+    "pytest>=8.0.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.uv.sources]
+vindicta-foundation = { workspace = true }
+
+[tool.mypy]
+strict = true
+python_version = "3.12"
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"

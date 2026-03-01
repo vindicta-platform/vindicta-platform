@@ -1,0 +1,41 @@
+# Slim image — minimal footprint (~150MB)
+# Use for CI, headless agents, and Docker CLI workflows
+FROM debian:bookworm-slim
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install only what the agent needs
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gnupg2 \
+    pinentry-tty \
+    git \
+    curl \
+    jq \
+    dos2unix \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install GitHub CLI
+RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+      -o /usr/share/keyrings/githubcli-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
+      > /etc/apt/sources.list.d/github-cli.list && \
+    apt-get update && apt-get install -y --no-install-recommends gh && \
+    rm -rf /var/lib/apt/lists/*
+
+# Create non-root agent user
+RUN useradd -m -s /bin/bash agent
+
+# Configure GPG for non-interactive use
+RUN mkdir -p /home/agent/.gnupg && \
+    echo "pinentry-program /usr/bin/pinentry-tty" > /home/agent/.gnupg/gpg-agent.conf && \
+    echo "no-tty" > /home/agent/.gnupg/gpg.conf && \
+    chmod 700 /home/agent/.gnupg && \
+    chown -R agent:agent /home/agent/.gnupg
+
+# Copy init script and fix line endings
+COPY init-agent.sh /usr/local/bin/init-agent.sh
+RUN dos2unix /usr/local/bin/init-agent.sh && chmod +x /usr/local/bin/init-agent.sh
+
+USER agent
+WORKDIR /workspace

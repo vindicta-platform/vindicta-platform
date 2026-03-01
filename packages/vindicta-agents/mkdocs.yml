@@ -1,0 +1,44 @@
+site_name: Vindicta Agents
+site_description: Agent SDKs and autonomous workflows for the Vindicta Platform.
+site_author: Vindicta Platform Contributors
+site_url: https://vindicta-platform.github.io/Vindicta-Agents/
+
+repo_name: vindicta-platform/Vindicta-Agents
+repo_url: https://github.com/vindicta-platform/Vindicta-Agents
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: indigo
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    - scheme: default
+      primary: indigo
+      accent: blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+  font:
+    text: Outfit
+    code: JetBrains Mono
+
+nav:
+  - Home: index.md
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - toc:
+      permalink: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - attr_list
+  - md_in_html
+
+plugins:
+  - search

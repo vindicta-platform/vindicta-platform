@@ -1,0 +1,15 @@
+# Vindicta Agents Documentation
+
+Welcome to the **Vindicta Agents** documentation — SDKs, workflows, and swarm orchestration for the Vindicta Platform.
+
+## Modules
+
+- **Agent SDK**: Base classes and protocol for Vindicta Agents.
+- **Nexus Orchestrator**: Coordination and state management for agent swarms.
+- **Axiomatic Supervisor**: Constitutional enforcement and governance.
+- **Flight Recorder**: SQLite-based auditing of all swarm events.
+
+## Links
+
+- [GitHub Repository](https://github.com/vindicta-platform/Vindicta-Agents)
+- [Foundation & Standards](https://github.com/vindicta-platform/vindicta-foundation)

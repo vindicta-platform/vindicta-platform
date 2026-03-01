@@ -1,0 +1,102 @@
+site_name: Vindicta Foundation
+site_description: Shared core models, constitutional axioms, and architectural documentation for the Vindicta Platform.
+site_author: Vindicta Platform Contributors
+site_url: https://vindicta-platform.github.io/vindicta-foundation/
+
+repo_name: vindicta-platform/vindicta-foundation
+repo_url: https://github.com/vindicta-platform/vindicta-foundation
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: deep purple
+      accent: purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    - scheme: default
+      primary: deep purple
+      accent: purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+  font:
+    text: Outfit
+    code: JetBrains Mono
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - toc.integrate
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
+
+nav:
+  - Home: index.md
+  - Roadmap: https://github.com/vindicta-platform/vindicta-foundation/blob/main/ROADMAP.md
+  - Constitution: constitution.md
+  - Core Concepts:
+    - WARScribe Whitepaper: concepts/warscribe-whitepaper.md
+    - WARScribe Manual: concepts/warscribe.md
+  - Architecture:
+    - Overview: architecture/overview.md
+    - Target State (C4): architecture/C4-Target-State.md
+    - C4 Model (DSL): architecture/c4-model.md
+    - Primordia Engine: architecture/primordia.md
+    - Inference Layer: architecture/inference-layer.md
+    - Cost Model: architecture/cost-model.md
+    - Quantum Leap Agents: architecture/agents.md
+    - System Modules: architecture/modules.md
+    - Evolution & Maturity: architecture/evolution.md
+    - ADRs:
+      - ADR Directory: architecture/adr/0001-record-architecture-decisions.md
+      - ADR-0002 C4 Architecture: architecture/adr/0002-c4-architecture-model.md
+      - ADR-0003 Require Interface: architecture/adr/0003-require-interface.md
+      - ADR-0004 API Versioning: architecture/adr/0004-api-versioning-strategy.md
+      - ADR-0005 Consolidation: architecture/adr/0005-consolidation.md
+      - ADR-0006 Consolidation Tactics: architecture/adr/0006-consolidation-tactics.md
+      - ADR-0007 Just Command Runner: architecture/adr/0007-just-command-runner.md
+      - ADR-0008 Minimal Devcontainer: architecture/adr/0008-minimal-devcontainer.md
+      - ADR-0009 MCP Client Injection: architecture/adr/0009-mcp-client-injection-pattern.md
+      - ADR-0010 MCP Context Limits: architecture/adr/0010-mcp-context-window-defaults.md
+      - ADR-0011 Adopt MCP Standard: architecture/adr/0011-adopt-model-context-protocol.md
+      - ADR-0012 Local-First RAG: architecture/adr/0012-local-first-offline-rag.md
+      - ADR-0013 Hash Idempotency: architecture/adr/0013-idempotent-markdown-hashing.md
+  - Getting Started:
+    - Quick Start: getting-started/quickstart.md
+    - Installation: getting-started/installation.md
+    - Your First Match: getting-started/first-match.md
+  - Features:
+    - Army Management: features/army-management.md
+    - Match Tracking: features/match-tracking.md
+    - Meta Analysis: features/meta-analysis.md
+    - AI Predictions: features/ai-predictions.md
+  - API Reference:
+    - REST API: api/rest.md
+    - CLI: api/cli.md
+
+
+
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - toc:
+      permalink: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - attr_list
+  - md_in_html
+  - pymdownx.arithmatex:
+      generic: true
+
+plugins:
+  - search

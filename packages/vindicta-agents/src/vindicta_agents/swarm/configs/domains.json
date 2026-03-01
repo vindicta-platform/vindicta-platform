@@ -1,0 +1,66 @@
+{
+    "vindicta-engine": {
+        "repo_name": "vindicta-engine",
+        "tech_stack": "Python (uv)",
+        "workflow_profile": "Python-full",
+        "primary_language": "python",
+        "node_name": "TechPriest",
+        "package_name": "vindicta_engine"
+    },
+    "warscribe-system": {
+        "repo_name": "warscribe-system",
+        "tech_stack": "Python (uv)",
+        "workflow_profile": "Python-full",
+        "primary_language": "python",
+        "node_name": "LogosHistorian",
+        "package_name": "warscribe"
+    },
+    "vindicta-economy": {
+        "repo_name": "vindicta-economy",
+        "tech_stack": "Python (uv)",
+        "workflow_profile": "Python-full",
+        "primary_language": "python",
+        "node_name": "VoidBanker",
+        "package_name": "vindicta_economy"
+    },
+    "primordia-ai": {
+        "repo_name": "Primordia-AI",
+        "tech_stack": "Python (uv)",
+        "workflow_profile": "Python-full",
+        "primary_language": "python",
+        "node_name": "SeersOracle",
+        "package_name": "primordia"
+    },
+    "meta-oracle": {
+        "repo_name": "Meta-Oracle",
+        "tech_stack": "Python + mixed",
+        "workflow_profile": "Python-full",
+        "primary_language": "python",
+        "node_name": "DebateMaster",
+        "package_name": "meta_oracle"
+    },
+    "logi-slate-ui": {
+        "repo_name": "Logi-Slate-UI",
+        "tech_stack": "Node.js (React/Tailwind)",
+        "workflow_profile": "Node-full",
+        "primary_language": "javascript",
+        "node_name": "ForgeSmith",
+        "package_name": "@vindicta/ui-kit"
+    },
+    "vindicta-portal": {
+        "repo_name": "Vindicta-Portal",
+        "tech_stack": "HTML/JS (Vite)",
+        "workflow_profile": "Node-lite",
+        "primary_language": "javascript",
+        "node_name": "PortalArchon",
+        "package_name": "vindicta-portal"
+    },
+    "vindicta-api": {
+        "repo_name": "Vindicta-API",
+        "tech_stack": "Python (FastAPI)",
+        "workflow_profile": "Python-full",
+        "primary_language": "python",
+        "node_name": "GateKnight",
+        "package_name": "vindicta_api"
+    }
+}

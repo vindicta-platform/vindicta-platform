@@ -1,0 +1,43 @@
+name: Feature Request
+description: Request a new axiomatic model or foundational capability.
+title: "[Feature]: "
+labels: ["enhancement", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        *Thank you for suggesting an improvement to the Vindicta Foundation!*
+        *Please make sure this request aligns with the Zero-Order Axioms defined in `docs/constitution.md`.*
+  
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: What problem are you trying to solve? Please provide as much context as possible.
+    validations:
+      required: true
+      
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed Solution
+      description: What is your preferred implementation path or architectural model?
+    validations:
+      required: true
+      
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: What other approaches did you consider and why did you discard them?
+    validations:
+      required: false
+      
+  - type: checkboxes
+    id: constitution
+    attributes:
+      label: Constitutional Alignment
+      description: Does this feature satisfy the Tier 1 axioms?
+      options:
+        - label: I have verified that this proposal does not violate the Zero-Order Axioms.
+          required: true

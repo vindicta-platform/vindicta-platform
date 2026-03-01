@@ -1,0 +1,6 @@
+site_name: Vindicta Economy
+site_description: Ledger, Quotas, and Gas Tank for the Vindicta Platform.
+site_author: Vindicta Platform Contributors
+
+nav:
+  - Home: index.md

@@ -1,0 +1,61 @@
+# Vindicta Platform RAG Pipeline
+
+This document outlines the design and implementation plan for a Retrieval-Augmented Generation (RAG) pipeline that scrapes Warhammer 40k rules data and serves it via a local Model Context Protocol (MCP) server for agents.
+
+## Goal Description
+Build a local intelligence tool for Vindicta Agents to query accurate, up-to-date Warhammer 40k rules from Wahapedia and 40k.app. The system needs to keep versioned histories of data segments to analyze rule changes over time and optimize for AI retrieval. It will run under `vindicta-oracle` (as the "Oracle" component handles knowledge and meta-reasoning in the platform).
+
+## Proposed ADRs
+
+To govern these key decisions, we will write two new ADRs in the `vindicta-oracle/docs/adr/` directory before proceeding with implementation:
+
+1. **ADR: Web Scraping Strategy for RAG Pipeline**
+   - **Context:** The scraping target sites (Wahapedia and 40k.app) frequently change DOM structure and rely heavily on JavaScript for dynamic content.
+   - **Decision:** Use **`crawl4ai`** to handle dynamic SPA content and convert HTML to markdown effectively for LLMs.
+   - **Alternatives Considered:** `playwright` (more manual boilerplate), static `httpx`/`BeautifulSoup` (inadequate for SPAs).
+
+2. **ADR: RAG Module Architecture & Vector Storage Retrieval**
+   - **Context:** Deciding how to store, version, and retrieve the chunks for the RAG pipeline optimally.
+   - **Decision:** Use an embedded AI-optimized vector database (e.g. **LanceDB** or **ChromaDB**) paired with SQLite for version-history metadata of rule text. This optimizes the data structure specifically for semantic AI retrieval.
+   - **Alternatives Considered:** Pure SQLite with full-text search (insufficient for semantic understanding), heavy external VectorDBs like Pinecone/Milvus (adds unnecessary dependency overhead for local development).
+
+## Proposed Changes
+
+### vindicta-oracle/docs/adr/
+#### [NEW] vindicta-oracle/docs/adr/0XX-web-scraping-strategy.md
+- Documents the choice of `crawl4ai` for dynamic chunking.
+#### [NEW] vindicta-oracle/docs/adr/0XX-rag-module-architecture.md
+- Documents the vector-database choice and pipeline integration pattern.
+
+### vindicta-oracle/rag_pipeline/
+A new module under `vindicta-oracle` to manage the scraping and storage.
+
+#### [NEW] vindicta-oracle/rag_pipeline/scraper.py
+- Implements `crawl4ai` routines for 40k.app and Wahapedia.
+- Extracts, cleans, and chunks text into meaningful rules segments.
+
+#### [NEW] vindicta-oracle/rag_pipeline/storage.py
+- Vector DB (LanceDB/Chroma) repository for storing segments embeddings for AI retrieval.
+- Computes SHA-256 hashes of segments to keep a versioned history of changes alongside vectors.
+
+### vindicta-oracle/mcp_server/
+The MCP entrypoint for agents to query.
+
+#### [NEW] vindicta-oracle/mcp_server/server.py
+- A fastAPI or standard MCP local server using the MCP Python SDK.
+- Exposes tools: `search_40k_rules(query: str)` which performs semantic searches against the vector DB and returns the most relevant context, including rule version history.
+
+#### [MODIFY] pyproject.toml / uv.lock
+Add `mcp`, `crawl4ai`, `lancedb` (or `chromadb`), and testing dependencies.
+
+## Verification Plan
+
+### Automated Testing & Build Integration
+- **Pre-Commit Integration:** Integrate test plans as part of the `pre-commit` queue to ensure no code breaks the existing pipeline.
+- **Repeatable Version Testing:** Unit tests for indexing and chunking will use cached, specific versions of static HTML fixtures to guarantee repeatable builds, ignoring live changes to websites during normal runs.
+- Unit tests for the Vector indexing and versioning hash mechanisms in `tests/test_rag_pipeline.py`.
+- Mock scraping tests to ensure robustness against DOM changes.
+
+### UI / End-to-End Verification
+- Start the MCP server locally and use an MCP client (or the current agent environment) to test `search_40k_rules` tool with a sample query like "What is the toughness of a Space Marine?".
+- Ensure the result comes back successfully and prioritizes newly-versioned chunks over old ones.

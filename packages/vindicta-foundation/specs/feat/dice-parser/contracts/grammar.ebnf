@@ -1,0 +1,52 @@
+// Dice Notation Grammar — Vindicta dice-parser
+// Parser: Lark LALR(1)
+// Constitutional Reference: AX-03 (Probability Source)
+//
+// Supports:
+//   - Basic dice:      NdS (e.g., 2d6, 1d20)
+//   - Arithmetic:      +, -, *, / with PEMDAS precedence
+//   - Modifiers:       kh (keep highest), kl (keep lowest),
+//                      dh (drop highest), dl (drop lowest),
+//                      e  (explode)
+//   - Integer literals: e.g., 3, 42
+//   - Grouping:        parentheses for precedence override
+//   - Unary negation:  -3, -(2d6)
+
+start: expr
+
+// Arithmetic — standard PEMDAS via precedence climbing
+?expr: term
+     | expr "+" term   -> add
+     | expr "-" term   -> sub
+
+?term: factor
+     | term "*" factor -> mul
+     | term "/" factor -> div
+
+?factor: "+" factor    -> pos
+       | "-" factor    -> neg
+       | atom
+
+?atom: modified_dice
+     | dice
+     | INTEGER         -> integer
+     | "(" expr ")"
+
+// Dice pool: NdS
+dice: INTEGER "d" INTEGER
+
+// Modifiers applied to a dice pool
+modified_dice: dice modifier+
+
+?modifier: "kh" INTEGER  -> keep_highest
+         | "kl" INTEGER  -> keep_lowest
+         | "dh" INTEGER  -> drop_highest
+         | "dl" INTEGER  -> drop_lowest
+         | "e" INTEGER   -> explode
+
+// Terminals
+INTEGER: /[0-9]+/
+
+// Whitespace handling
+%import common.WS
+%ignore WS

@@ -1,0 +1,6 @@
+site_name: Vindicta Oracle
+site_description: Pre-match prediction and strategic analysis models.
+site_author: Vindicta Platform Contributors
+
+nav:
+  - Home: index.md

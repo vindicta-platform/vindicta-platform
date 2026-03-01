@@ -1,0 +1,2 @@
+[MOCKED EXECUTION] System: You are the Architect. | User: Draft a plan based on this spec:
+[MOCKED EXECUTION] System: You are the PO. | User: Write a spec for: You will add additional test cases to all domain, at least 1

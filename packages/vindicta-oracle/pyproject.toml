@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vindicta-oracle"
+version = "0.1.0"
+description = "AI debate engine for competitive Warhammer predictions"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+dependencies = [
+    "ollama>=0.3",
+    "pydantic>=2.0",
+    "duckdb>=0.10",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.4", "pre-commit>=3.7"]
+api = ["fastapi>=0.109.0", "uvicorn>=0.27.0"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+addopts = "--cov=vindicta_oracle --cov-report=term-missing"
+
+[tool.coverage.run]
+source = ["src/vindicta_oracle"]
+omit = [
+    "tests/*",
+    "src/vindicta_oracle/__main__.py",
+    "src/vindicta_oracle/demo.py",
+    "src/vindicta_oracle/debate.py",
+    "src/vindicta_oracle/agents/*_impl.py",
+]
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+    "pytest-asyncio>=1.3.0",
+    "pytest-cov>=6.0.0",
+    "fastapi>=0.109.0",
+    "httpx>=0.27.0",
+    "sphinx>=9.1.0",
+    "myst-parser>=5.0.0",
+    "furo>=2025.12.19",
+]

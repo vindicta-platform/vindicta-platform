@@ -1,0 +1,6 @@
+site_name: WarScribe System
+site_description: Notation parsing and game state reconstruction.
+site_author: Vindicta Platform Contributors
+
+nav:
+  - Home: index.md

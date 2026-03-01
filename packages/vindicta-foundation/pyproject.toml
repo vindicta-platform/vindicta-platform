@@ -1,0 +1,73 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vindicta-foundation"
+version = "0.1.0"
+description = "Axiomatic core models and architecture for the Vindicta Platform"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pydantic>=2.10.0",
+    "lark>=1.2.0",
+]
+
+[project.optional-dependencies]
+rag = [
+    "crawl4ai>=0.4.0",
+    "chromadb>=0.5.0",
+    "ollama>=0.4.0",
+    "mcp>=1.0.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.mypy]
+strict = true
+python_version = "3.12"
+
+[[tool.mypy.overrides]]
+module = "behave.*"
+ignore_missing_imports = true
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "D"]
+ignore = ["D100", "D104"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+addopts = "--cov=vindicta_foundation --cov-report=term-missing"
+
+[dependency-groups]
+dev = [
+    "mypy>=1.0.0",
+    "ruff>=0.1.0",
+    "pytest>=8.0.0",
+    "pytest-cov>=6.0.0",
+    "pytest-sugar>=1.1.1",
+    "pytest-xdist>=3.5.0",
+    "pytest-mock",
+    "behave>=1.2.6",
+    "pre-commit",
+    "mkdocs-material",
+    "mkdocs-macros-plugin",
+    "mike",
+    "towncrier",
+]
+
+[tool.coverage.run]
+source = ["src/vindicta_foundation"]
+omit = ["tests/*"]
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true

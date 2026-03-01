@@ -1,0 +1,42 @@
+# Secrets
+.env
+.devcontainer/.env
+*.pem
+*.key
+*.p12
+
+# GPG
+*.gpg
+*.asc
+secring.*
+
+# OS
+.DS_Store
+Thumbs.db
+*.db
+
+# IDE
+.vscode/
+.idea/
+.langgraph_api/
+*.swp
+*.swo
+
+# Node
+node_modules/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Logs
+automation/logs/
+*.log
+report.xml
+simulation_output.txt
+mdlint*.txt
+
+# Output
+output/
+.keys/

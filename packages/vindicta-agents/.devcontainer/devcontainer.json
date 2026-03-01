@@ -1,0 +1,19 @@
+{
+  "name": "Vindicta Agent",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "containerEnv": {
+    "AGENT_NAME": "${localEnv:AGENT_NAME:vindicta-bot}",
+    "AGENT_EMAIL": "${localEnv:AGENT_EMAIL}",
+    "GITHUB_TOKEN": "${localEnv:AGENT_GITHUB_TOKEN}",
+    "GPG_PRIVATE_KEY": "${localEnv:GPG_PRIVATE_KEY}"
+  },
+  "postCreateCommand": "init-agent.sh",
+  "remoteUser": "vscode"
+}

@@ -1,0 +1,44 @@
+site_name: Vindicta Engine
+site_description: Physics, Dice, and AI Core for the Vindicta Platform.
+site_author: Vindicta Platform Contributors
+site_url: https://vindicta-platform.github.io/vindicta-engine/
+
+repo_name: vindicta-platform/vindicta-engine
+repo_url: https://github.com/vindicta-platform/vindicta-engine
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: red
+      accent: amber
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    - scheme: default
+      primary: red
+      accent: amber
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+  font:
+    text: Outfit
+    code: JetBrains Mono
+
+nav:
+  - Home: index.md
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - toc:
+      permalink: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - attr_list
+  - md_in_html
+
+plugins:
+  - search
