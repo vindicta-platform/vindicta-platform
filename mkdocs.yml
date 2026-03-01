@@ -27,6 +27,8 @@ theme:
 
 nav:
   - Home: index.md
+  - Foundation: '!include packages/vindicta-foundation/mkdocs.yml'
+  - Agents: '!include packages/vindicta-agents/mkdocs.yml'
 
 markdown_extensions:
   - admonition
@@ -42,3 +44,4 @@ markdown_extensions:
 
 plugins:
   - search
+  - monorepo
