@@ -25,11 +25,17 @@ def main() -> None:
         name="Intercessor Squad Alpha",
         faction="Ultramarines",
         models_remaining=5,
+        wounds_remaining=10,
+        position_x=0.0,
+        position_y=0.0,
     )
     warriors = UnitReference(
         name="Necron Warriors",
         faction="Necrons",
         models_remaining=10,
+        wounds_remaining=10,
+        position_x=12.0,
+        position_y=0.0,
     )
 
     print(f"\n📋 Units: {intercessors} vs {warriors}")
@@ -41,8 +47,9 @@ def main() -> None:
         actor=intercessors,
         distance_inches=6.0,
         result=ActionResult.SUCCESS,
+        notes="Moved into cover",
     )
-    print(f"\n🏃 Move: {intercessors.name} advances {move.distance_inches}\"")
+    print(f'\n🏃 Move: {intercessors.name} advances {move.distance_inches}"')
 
     # --- Shooting ---
     shoot = ShootAction(
@@ -58,6 +65,7 @@ def main() -> None:
         damage_dealt=3,
         models_killed=3,
         result=ActionResult.SUCCESS,
+        notes="Fired at optimal range",
     )
     print(
         f"🔫 Shoot: {shoot.weapon_name} — "
@@ -75,10 +83,11 @@ def main() -> None:
         distance_needed=6.5,
         made_charge=True,
         result=ActionResult.SUCCESS,
+        notes="Successful charge",
     )
     print(
-        f"⚡ Charge: roll {charge.charge_roll} = {sum(charge.charge_roll)}\" "
-        f"(needed {charge.distance_needed}\") — "
+        f'⚡ Charge: roll {charge.charge_roll} = {sum(charge.charge_roll)}" '
+        f'(needed {charge.distance_needed}") — '
         f"{'Made it!' if charge.made_charge else 'Failed!'}"
     )
 

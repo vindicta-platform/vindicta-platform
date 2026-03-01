@@ -22,3 +22,13 @@ Thumbs.db
 
 # uv
 uv.lock
+
+# Agent tooling
+.agent/
+
+# pytest
+pytest_cache/
+
+# site
+/site
+/site-packages

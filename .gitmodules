@@ -18,3 +18,27 @@
 [submodule "Vindicta-Agents"]
 	path = Vindicta-Agents
 	url = https://github.com/vindicta-platform/Vindicta-Agents.git
+[submodule "packages/vindicta-foundation"]
+	path = packages/vindicta-foundation
+	url = https://github.com/vindicta-platform/vindicta-foundation.git
+[submodule "packages/vindicta-engine"]
+	path = packages/vindicta-engine
+	url = https://github.com/vindicta-platform/vindicta-engine.git
+[submodule "packages/warscribe-system"]
+	path = packages/warscribe-system
+	url = https://github.com/vindicta-platform/warscribe-system.git
+[submodule "packages/vindicta-economy"]
+	path = packages/vindicta-economy
+	url = https://github.com/vindicta-platform/vindicta-economy.git
+[submodule "packages/vindicta-oracle"]
+	path = packages/vindicta-oracle
+	url = https://github.com/vindicta-platform/vindicta-oracle.git
+[submodule "packages/vindicta-agents"]
+	path = packages/vindicta-agents
+	url = https://github.com/vindicta-platform/Vindicta-Agents.git
+[submodule "packages/features"]
+	path = features
+	url = https://github.com/vindicta-platform/features.git
+[submodule "specs"]
+	path = specs
+	url = https://github.com/vindicta-platform/specs.git

@@ -23,16 +23,22 @@ def main() -> None:
         name="Hellblaster Squad",
         faction="Ultramarines",
         models_remaining=5,
+        wounds_remaining=10,
+        position_x=0.0,
+        position_y=0.0,
     )
     target = UnitReference(
         name="Plague Marines",
         faction="Death Guard",
         models_remaining=5,
+        wounds_remaining=10,
+        position_x=12.0,
+        position_y=0.0,
     )
 
     print(f"\n⚔️  {attacker} vs {target}")
-    print(f"   Weapon: Plasma Incinerator (supercharge)")
-    print(f"   Profile: 5 attacks, BS 3+, S8 vs T5 (wound 3+), Sv 3+, D2")
+    print("   Weapon: Plasma Incinerator (supercharge)")
+    print("   Profile: 5 attacks, BS 3+, S8 vs T5 (wound 3+), Sv 3+, D2")
 
     # --- Simulate combat with the engine ---
     combat = engine.combat_roll(
@@ -43,7 +49,7 @@ def main() -> None:
         damage=2,
     )
 
-    print(f"\n🎲 Dice Results")
+    print("\n🎲 Dice Results")
     print(f"   Hit rolls  : {[r.value for r in combat.hit_rolls]}")
     print(f"   Hits        : {combat.hits}/{combat.attacks}")
     print(f"   Wound rolls : {[r.value for r in combat.wound_rolls]}")
@@ -68,12 +74,11 @@ def main() -> None:
         damage_dealt=combat.damage_dealt,
         models_killed=models_killed,
         result=ActionResult.SUCCESS if combat.damage_dealt > 0 else ActionResult.FAILED,
+        notes="Simulation of Plasma Incinerator",
     )
 
-    print(f"\n📜 Combat Transcript")
-    print(
-        f"   {action.actor.name} fires {action.weapon_name} at {action.target.name}"
-    )
+    print("\n📜 Combat Transcript")
+    print(f"   {action.actor.name} fires {action.weapon_name} at {action.target.name}")
     print(
         f"   Result: {action.shots}S → {action.hits}H → {action.wounds}W → "
         f"{action.damage_dealt}D ({models_killed} models killed)"
