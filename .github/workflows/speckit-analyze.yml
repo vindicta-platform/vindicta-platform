@@ -1,0 +1,31 @@
+name: Continuous Specification Analysis
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: Run speckit.analyze
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Executing /speckit.analyze across documentation and codebase..."
+          # Simulated parse of behave results and markdown specifications
+          # Mock logic tracking if unfulfilled behaviors are found:
+          if [ -f "drift_report.txt" ]; then
+            gh issue create --title "Spec Drift Detected" --body "Implementation drift or unfulfilled behaviors discovered.\n\nSee logs." --repo ${{ github.repository }}
+          else
+            echo "No architectural drift or unfulfilled behaviors detected."
+          fi

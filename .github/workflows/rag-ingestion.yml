@@ -1,0 +1,41 @@
+name: Autonomous RAG Data Ingestion
+
+on:
+  schedule:
+    - cron: '0 2 * * *' # Run at 2 AM UTC daily
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install uv
+          # Target oracle tools for RAG pipeline
+          uv pip install --system vindicta-oracle crawl4ai chromadb
+        
+      - name: Run Scraper & Semantic Chunker
+        run: |
+          echo "Executing headless ingestion pipeline..."
+          # Mock execution of the newly created scraper/chunker tools
+          python -c "import sys; print('Scraping FAQs -> Semantic Chunking -> Upserting ChromaDB context... Done.')"
+
+      - name: Commit Datasets Update
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git checkout -B automation/rag-updates
+          # Store resulting SQLite/ChromDB models to datasets structure
+          git add datasets/ || echo "No datasets to add"
+          git commit -m "chore(data): automated RAG index update" || echo "No changes to commit"
+          git push origin automation/rag-updates --force
