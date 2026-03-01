@@ -1,7 +1,7 @@
 site_name: Vindicta Platform
 site_description: Unified Gateway, UI, and Orchestration for the Vindicta Platform.
 site_author: Vindicta Platform Contributors
-site_url: https://vindicta-platform.github.io/vindicta-platform/
+site_url: https://vindicta-platform.github.io/docs
 
 repo_name: vindicta-platform/vindicta-platform
 repo_url: https://github.com/vindicta-platform/vindicta-platform
@@ -27,9 +27,12 @@ theme:
 
 nav:
   - Home: index.md
-  - Foundation: '!include packages/vindicta-foundation/mkdocs.yml'
-  - Agents: '!include packages/vindicta-agents/mkdocs.yml'
-
+  - Engine: https://vindicta-platform.github.io/vindicta-engine/
+  - Foundation: https://vindicta-platform.github.io/vindicta-foundation/
+  - Warscribe: https://vindicta-platform.github.io/warscribe-system/
+  - Economy: https://vindicta-platform.github.io/vindicta-economy/
+  - Oracle: https://vindicta-platform.github.io/vindicta-oracle/
+  - Agents: https://vindicta-platform.github.io/vindicta-agents/
 markdown_extensions:
   - admonition
   - codehilite
@@ -44,4 +47,3 @@ markdown_extensions:
 
 plugins:
   - search
-  - monorepo

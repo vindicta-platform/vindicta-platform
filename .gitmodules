@@ -39,3 +39,6 @@
 [submodule "packages/features"]
 	path = features
 	url = https://github.com/vindicta-platform/features.git
+[submodule "specs"]
+	path = specs
+	url = https://github.com/vindicta-platform/specs.git

@@ -23,11 +23,17 @@ def main() -> None:
         name="Hellblaster Squad",
         faction="Ultramarines",
         models_remaining=5,
+        wounds_remaining=10,
+        position_x=0.0,
+        position_y=0.0,
     )
     target = UnitReference(
         name="Plague Marines",
         faction="Death Guard",
         models_remaining=5,
+        wounds_remaining=10,
+        position_x=12.0,
+        position_y=0.0,
     )
 
     print(f"\n⚔️  {attacker} vs {target}")
@@ -68,6 +74,7 @@ def main() -> None:
         damage_dealt=combat.damage_dealt,
         models_killed=models_killed,
         result=ActionResult.SUCCESS if combat.damage_dealt > 0 else ActionResult.FAILED,
+        notes="Simulation of Plasma Incinerator",
     )
 
     print("\n📜 Combat Transcript")
