@@ -51,8 +51,8 @@ ignore = ["D105"]
 "packages/warscribe-system/tests/**/*.py" = ["D"]
 "tests/**/*.py" = ["D"]
 "features/**/*.py" = ["D", "E501", "F811"]
-"**/features/**/*.py" = ["F811"]
-"**/features/steps/*.py" = ["D", "F811"]
+"packages/**/features/**/*.py" = ["F811"]
+"packages/**/features/steps/*.py" = ["D", "F811"]
 [tool.mypy]
 ignore_missing_imports = true
 explicit_package_bases = true

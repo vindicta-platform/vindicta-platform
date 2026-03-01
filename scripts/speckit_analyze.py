@@ -1,8 +1,17 @@
 import os
 import json
 import logging
+import re
+from urllib.parse import urlparse
+
 from github import Github
 import ollama
+
+MAX_TITLE_LEN = 256
+MAX_BODY_LEN = 65_536
+# Only allow links pointing to the project's own GitHub org
+_ALLOWED_URL_HOSTS = {"github.com"}
+_URL_PATTERN = re.compile(r"https?://[^\s)>]+")
 
 logging.basicConfig(level=logging.INFO)
 
@@ -81,6 +90,35 @@ Context:
                 "body",
                 "Drift was detected by local speckit analysis, but no details were provided.",
             )
+
+            # --- Validation gate ---
+            if not isinstance(title, str) or not isinstance(body, str):
+                logging.warning("Skipping issue: title/body must be strings.")
+                continue
+
+            if len(title) > MAX_TITLE_LEN:
+                logging.warning(
+                    f"Skipping issue: title exceeds {MAX_TITLE_LEN} chars."
+                )
+                continue
+
+            if len(body) > MAX_BODY_LEN:
+                logging.warning(
+                    f"Skipping issue: body exceeds {MAX_BODY_LEN} chars."
+                )
+                continue
+
+            # Reject issues that embed links to external (non-GitHub) sites
+            urls_in_text = _URL_PATTERN.findall(f"{title} {body}")
+            if any(
+                urlparse(u).hostname not in _ALLOWED_URL_HOSTS
+                for u in urls_in_text
+            ):
+                logging.warning(
+                    f"Skipping issue with suspicious external URL(s): {title}"
+                )
+                continue
+            # --- End validation ---
 
             repo.create_issue(
                 title=title, body=body, labels=["quality", "speckit.analyze"]
