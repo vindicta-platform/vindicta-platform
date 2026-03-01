@@ -1,0 +1,78 @@
+name: Speckit Analyze (Agents)
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/vindicta-agents/specs/**'
+      - 'packages/vindicta-agents/features/**'
+      - 'packages/vindicta-agents/src/**'
+      - 'packages/vindicta-agents/tests/**'
+      - 'docs/constitution.md'
+      - 'scripts/speckit_analyze.py'
+      - '.github/workflows/speckit-analyze-agents.yml'
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Cache Ollama models
+        uses: actions/cache@v4
+        with:
+          path: ~/.ollama
+          key: ${{ runner.os }}-ollama-phi3
+          restore-keys: |
+            ${{ runner.os }}-ollama-
+
+      - name: Start Ollama service
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          ollama serve &
+          sleep 5
+          ollama pull phi3 || true
+
+      - name: Run Tests to Generate Context
+        working-directory: packages/vindicta-agents
+        run: |
+          uv sync --all-extras
+          uv run behave -f json -o behave_report.json || true
+          uv run pytest > pytest_report.txt || true
+        continue-on-error: true
+
+      - name: Setup Node.js (for repomix)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Initialize Spec Kit
+        working-directory: packages/vindicta-agents
+        run: |
+          uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
+          specify init --here --ai generic --script sh --force
+
+      - name: Package Context with Repomix
+        working-directory: packages/vindicta-agents
+        run: |
+          npx -y repomix --include "specs/**/*.md,features/**/*.feature,behave_report.json,pytest_report.txt,../../docs/constitution.md,../../.github/workflows/speckit-analyze-agents.yml" --ignore "src/**,tests/**,node_modules/**,.venv/**" -o repomix_context.xml
+
+      - name: Run Speckit Analysis
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          uv run --with PyGithub --with ollama python scripts/speckit_analyze.py
