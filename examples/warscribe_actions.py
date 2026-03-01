@@ -42,7 +42,7 @@ def main() -> None:
         distance_inches=6.0,
         result=ActionResult.SUCCESS,
     )
-    print(f"\n🏃 Move: {intercessors.name} advances {move.distance_inches}\"")
+    print(f'\n🏃 Move: {intercessors.name} advances {move.distance_inches}"')
 
     # --- Shooting ---
     shoot = ShootAction(
@@ -77,8 +77,8 @@ def main() -> None:
         result=ActionResult.SUCCESS,
     )
     print(
-        f"⚡ Charge: roll {charge.charge_roll} = {sum(charge.charge_roll)}\" "
-        f"(needed {charge.distance_needed}\") — "
+        f'⚡ Charge: roll {charge.charge_roll} = {sum(charge.charge_roll)}" '
+        f'(needed {charge.distance_needed}") — '
         f"{'Made it!' if charge.made_charge else 'Failed!'}"
     )
 
