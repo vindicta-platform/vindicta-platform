@@ -1,0 +1,2 @@
+c:\Users\bfoxt\vindicta-platform-testing\vindicta-platform\packages\vindicta-agents\scripts\run_swarm.py:136: error: Incompatible return value type (got "VindictaState", expected "dict[Any, Any]")  [return-value]
+Found 1 error in 1 file (checked 143 source files)
