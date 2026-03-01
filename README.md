@@ -9,38 +9,56 @@ Mono-entry point for the [Vindicta Platform](https://github.com/vindicta-platfor
 git clone --recurse-submodules https://github.com/vindicta-platform/vindicta-platform.git
 cd vindicta-platform
 
-# Install dependencies
+# Sync the unified workspace dependencies
 uv sync
 
 # Run the examples
 uv run examples/dice_roll.py
 uv run examples/warscribe_actions.py
 uv run examples/combat_sim.py
+
+# Pull latest updates from all submodules
+git submodule update --remote
 ```
+
+## Capabilities
+
+The platform is continuously evolving. Recent additions include:
+- **Monte Carlo Tree Search (MCTS)**: Advanced Game AI capabilities across the platform.
+- **RAG Pipeline**: Integrated LLM embeddings via MCP and ChromaDB.
 
 ## Repository Structure
 
-```
+```text
 vindicta-platform/
-├── vindicta-foundation/   # Shared kernel: base models & architecture
-├── vindicta-engine/       # Physics, dice, and AI core
-├── warscribe-system/      # Notation parsing & game state
+├── packages/
+│   ├── vindicta-foundation/   # Shared kernel: base models & architecture
+│   ├── vindicta-engine/       # Physics, dice, and AI core
+│   ├── warscribe-system/      # Notation parsing & game state
+│   ├── vindicta-economy/      # Ledger, quotas, and gas tank
+│   ├── vindicta-oracle/       # Predictive models and meta analysis
+│   ├── vindicta-agents/       # Swarm Orchestration & SDKs
+│   └── features/              # Centralized BDD Feature tests
 ├── examples/
-│   ├── dice_roll.py       # 🎲 Roll dice with cryptographic proofs
-│   ├── warscribe_actions.py  # 📜 Create & serialize game actions
-│   └── combat_sim.py      # ⚔️ Full combat simulation
-└── pyproject.toml         # uv workspace root
+│   ├── dice_roll.py           # 🎲 Roll dice with cryptographic proofs
+│   ├── warscribe_actions.py   # 📜 Create & serialize game actions
+│   └── combat_sim.py          # ⚔️ Full combat simulation
+└── pyproject.toml             # uv workspace root
 ```
 
 ## Submodules
 
-| Domain     | Submodule              | Package               |
-| :--------- | :--------------------- | :-------------------- |
-| Foundation | `vindicta-foundation/` | `vindicta_foundation` |
-| Engine     | `vindicta-engine/`     | `vindicta_engine`     |
-| Scribe     | `warscribe-system/`    | `warscribe`           |
+| Domain     | Submodule                        |
+| :--------- | :------------------------------- |
+| Foundation | `packages/vindicta-foundation/`  |
+| Engine     | `packages/vindicta-engine/`      |
+| Scribe     | `packages/warscribe-system/`     |
+| Economy    | `packages/vindicta-economy/`     |
+| Oracle     | `packages/vindicta-oracle/`      |
+| Agents     | `packages/vindicta-agents/`      |
+| Features   | `packages/features/`             |
 
-All submodules are wired as editable `uv` workspace members — changes to any submodule are immediately reflected.
+All submodules are wired as editable `uv` workspace members — changes to any submodule are immediately reflected across the entire platform.
 
 ## Documentation
 
@@ -54,4 +72,3 @@ All submodules are wired as editable `uv` workspace members — changes to any s
 ---
 
 *Built with 🎲 by the Vindicta Team*
-

@@ -1,15 +1,30 @@
 [project]
 name = "vindicta-platform"
 version = "0.1.0"
-description = "Orchestrator: mono-entry point for the Vindicta Platform"
+description = "Modular Monorepo: Unified entry point for the Vindicta Platform"
 requires-python = ">=3.12"
 dependencies = [
     "vindicta-foundation",
     "vindicta-engine",
+    "vindicta-economy",
+    "vindicta-oracle",
+    "vindicta-agents",
     "warscribe-system",
 ]
 
+[tool.uv.workspace]
+members = ["packages/*"]
+
 [tool.uv.sources]
-vindicta-foundation = { path = "vindicta-foundation", editable = true }
-vindicta-engine = { path = "vindicta-engine", editable = true }
-warscribe-system = { path = "warscribe-system", editable = true }
+# Local workspace overrides
+vindicta-foundation = { workspace = true }
+vindicta-engine = { workspace = true }
+vindicta-economy = { workspace = true }
+vindicta-oracle = { workspace = true }
+vindicta-agents = { workspace = true }
+warscribe-system = { workspace = true }
+
+[dependency-groups]
+dev = [
+    "mkdocs-monorepo-plugin>=1.1.2",
+]
