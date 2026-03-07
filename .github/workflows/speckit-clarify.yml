@@ -1,0 +1,17 @@
+name: Speckit Clarify on PR
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'specs/**'
+      - 'features/**'
+      - '**/*spec.md'
+      - '**/*.feature'
+
+jobs:
+  clarify:
+    uses: vindicta-platform/.github/.github/workflows/speckit-clarify-template.yml@main
+    permissions:
+      contents: read
+      pull-requests: write
