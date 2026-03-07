@@ -79,16 +79,56 @@ jobs:
             integration_bdd_report.json
           retention-days: 14
 
-      - name: Create issue on failure
+      - name: Close stale integration issues on success
+        if: steps.imports.outputs.failures == '0'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner, repo: context.repo.repo,
+              labels: 'bug,integration', state: 'open'
+            });
+            for (const issue of issues) {
+              if (issue.title.includes('Integration test failures')) {
+                await github.rest.issues.update({
+                  owner: context.repo.owner, repo: context.repo.repo,
+                  issue_number: issue.number, state: 'closed',
+                  state_reason: 'completed'
+                });
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner, repo: context.repo.repo,
+                  issue_number: issue.number,
+                  body: '✅ All integration tests passing again. Auto-closing.'
+                });
+              }
+            }
+
+      - name: Create or update issue on failure
         if: steps.imports.outputs.failures != '0'
         uses: actions/github-script@v7
         with:
           script: |
             const failures = '${{ steps.imports.outputs.failures }}';
-            await github.rest.issues.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              title: `🚨 Integration test failures: ${failures} package(s) broken`,
-              body: `The nightly integration test detected ${failures} cross-package import failure(s).\n\nSee the [workflow run](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}) for details.`,
-              labels: ['bug', 'integration']
+            const title = `🚨 Integration test failures: ${failures} package(s) broken`;
+            const body = `The nightly integration test detected ${failures} cross-package import failure(s).\n\nSee the [workflow run](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}) for details.`;
+
+            // Check for existing open issue to avoid duplicates
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner, repo: context.repo.repo,
+              labels: 'bug,integration', state: 'open'
             });
+            const existing = issues.find(i => i.title.includes('Integration test failures'));
+
+            if (existing) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner, repo: context.repo.repo,
+                issue_number: existing.number,
+                body: `🔄 **Still failing** (${new Date().toISOString().slice(0, 10)}): ${failures} package(s) broken.\n\n[Workflow run](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})`
+              });
+              core.notice(`Updated existing integration issue #${existing.number}`);
+            } else {
+              await github.rest.issues.create({
+                owner: context.repo.owner, repo: context.repo.repo,
+                title, body, labels: ['bug', 'integration']
+              });
+            }
