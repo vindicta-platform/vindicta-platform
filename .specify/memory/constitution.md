@@ -1,50 +1,74 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report:
+- Version Change: 1.1.0 → 1.1.1
+- Modified Principles: None (Consistency refinement).
+- Added Sections: None.
+- Removed Sections: None.
+- Templates requiring updates:
+  - .specify/templates/plan-template.md (✅ updated - listed principles in Constitution Check)
+  - .specify/templates/tasks-template.md (✅ updated - made tests mandatory)
+  - .specify/templates/spec-template.md (✅ checked - already requires mandatory testing)
+- Follow-up TODOs: None.
+-->
+
+# Vindicta Platform Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Platform over Silo
+The platform functions as a unified intelligence. While implemented as discrete submodules, all interfaces
+MUST remain strongly typed, well-documented, and universally accessible to the core orchestrator.
+Cross-package dependencies must be explicit and mediated through the `vindicta-foundation` models.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Test-Driven Architecture
+Every component MUST rely on definitive test coverage, integrated through the centralized BDD
+(`features`) testing suite. Test failures in any submodule block integration into the platform.
+New features are incomplete until verified by independent acceptance scenarios.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Transparent Decisions
+All architectural modifications REQUIRE an Architectural Decision Record (ADR). Implicit complexity is
+rejected; explicit justification is mandated for any deviation from established patterns.
+Decisions must be documented in `docs/architecture/adr/`.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Observability & Logging
+Every feature MUST implement structured logging and observability hooks. Debuggability is a first-class
+requirement; system state transitions and errors must be traceable without manual debugger
+attachment. Use the platform's standardized logging utilities.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Simplicity (YAGNI)
+Reject speculative or "just-in-case" complexity. Implement only what is required by the current
+feature specification. Code that does not directly serve a functional requirement or a mandated
+architectural pattern should be removed.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Additional Requirements
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### Technology Stack
+- **Python 3.12+**: Use modern features (type hints, `asyncio` where appropriate).
+- **uv**: Primary package and workspace manager.
+- **Ruff**: Mandatory for linting and formatting.
+- **Mojo/Rust/Go**: Permitted for performance-critical kernels if justified by an ADR.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+### Documentation Standards
+- **MkDocs**: All documentation must be compatible with the root `mkdocs.yml`.
+- **C4 Model**: Container and Component diagrams must be updated for structural changes.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+## Development Workflow
+
+### Feature Lifecycle
+1. **Specify**: Define user stories and acceptance criteria in `/specs/`.
+2. **Plan**: Technical research, data modeling, and task breakdown.
+3. **Implement**: Test-first development with regular integration checks.
+4. **Validate**: Verify against the original specification and platform benchmarks.
+
+### Quality Gates
+- **90% Coverage**: Mandatory for all new logic.
+- **Type Safety**: No `Any` types without explicit justification.
+- **Pre-commit**: All hooks must pass before code is submitted for review.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This Constitution defines the mandatory requirements for all work within the Vindicta Platform.
+Amendments require a formal proposal and ratification by the platform maintainers. Compliance is
+verified during every feature implementation via the "Constitution Check" gate.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.1.1 | **Ratified**: 2026-03-06 | **Last Amended**: 2026-03-07

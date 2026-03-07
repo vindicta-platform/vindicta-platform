@@ -31,7 +31,11 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- [ ] **I. Platform over Silo**: Typed interfaces, `vindicta-foundation` models used.
+- [ ] **II. Test-Driven Architecture**: Coverage mandatory (90%). Tests written first?
+- [ ] **III. Transparent Decisions**: ADR created for architectural changes?
+- [ ] **IV. Observability & Logging**: Structured logging implemented?
+- [ ] **V. Simplicity (YAGNI)**: No speculative complexity?
 
 ## Project Structure
 
