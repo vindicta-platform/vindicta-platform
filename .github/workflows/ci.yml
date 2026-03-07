@@ -1,0 +1,100 @@
+name: Platform CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'packages/**'
+      - 'features/**'
+      - 'pyproject.toml'
+      - 'uv.lock'
+      - '.github/workflows/ci.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'packages/**'
+      - 'features/**'
+      - 'pyproject.toml'
+      - 'uv.lock'
+      - '.github/workflows/ci.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: platform-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  workspace-lint:
+    name: Workspace Lint & Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install workspace dependencies
+        run: uv sync --dev
+
+      - name: Lint with ruff (workspace)
+        run: |
+          uv run ruff check packages/ --output-format=github
+          uv run ruff format --check packages/
+
+      - name: Type check with mypy (workspace)
+        run: uv run mypy packages
+
+  workspace-test:
+    name: Workspace Tests
+    runs-on: ubuntu-latest
+    needs: [workspace-lint]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install workspace dependencies
+        run: uv sync --dev
+
+      - name: Run all unit tests
+        run: uv run pytest packages/ -v --tb=short
+
+      - name: Run BDD tests
+        run: |
+          if [ -d "features" ]; then
+            uv run behave
+          else
+            echo "::notice::No features directory found, skipping BDD tests"
+          fi
+
+  docs-build:
+    name: Documentation Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: astral-sh/setup-uv@v5
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install docs dependencies
+        run: uv pip install --system mkdocs-material mkdocs-monorepo-plugin pymdown-extensions
+
+      - name: Build docs
+        run: mkdocs build --strict
