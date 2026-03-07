@@ -1,0 +1,80 @@
+name: Dependency Graph Visualizer
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+concurrency:
+  group: dep-graph-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  visualize:
+    name: Generate Dependency Graph
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Init submodules
+        run: git submodule update --init --recursive --depth 1 || true
+
+      - name: Generate mermaid dependency graph
+        run: |
+          GRAPH_FILE="docs/architecture/dependency-graph.md"
+          mkdir -p "$(dirname $GRAPH_FILE)"
+
+          echo '# Package Dependency Graph' > "$GRAPH_FILE"
+          echo '' >> "$GRAPH_FILE"
+          echo '_Auto-generated. Do not edit manually._' >> "$GRAPH_FILE"
+          echo '' >> "$GRAPH_FILE"
+          echo '```mermaid' >> "$GRAPH_FILE"
+          echo 'graph TD' >> "$GRAPH_FILE"
+
+          # Scan pyproject.toml files for inter-package dependencies
+          for pkg_dir in packages/*/; do
+            PKG_NAME=$(basename "$pkg_dir")
+            PYPROJECT="${pkg_dir}pyproject.toml"
+            [ -f "$PYPROJECT" ] || continue
+
+            # Normalize name for mermaid
+            NODE_ID=$(echo "$PKG_NAME" | tr '-' '_')
+
+            # Extract dependencies
+            DEPS=$(grep -E '^\s+"vindicta|^\s+"warscribe' "$PYPROJECT" 2>/dev/null | sed 's/[^a-zA-Z_-]/ /g' | tr ' ' '\n' | grep -E 'vindicta|warscribe' | sort -u || true)
+
+            if [ -z "$DEPS" ]; then
+              echo "    ${NODE_ID}[${PKG_NAME}]" >> "$GRAPH_FILE"
+            else
+              for dep in $DEPS; do
+                DEP_ID=$(echo "$dep" | tr '-' '_')
+                echo "    ${NODE_ID}[${PKG_NAME}] --> ${DEP_ID}[${dep}]" >> "$GRAPH_FILE"
+              done
+            fi
+          done
+
+          echo '```' >> "$GRAPH_FILE"
+          echo '' >> "$GRAPH_FILE"
+          echo "_Generated: $(date -u '+%Y-%m-%d %H:%M UTC')_" >> "$GRAPH_FILE"
+
+          echo '### \ud83d\udcca Dependency Graph' >> $GITHUB_STEP_SUMMARY
+          cat "$GRAPH_FILE" >> $GITHUB_STEP_SUMMARY
+
+      - name: Create PR if changed
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'docs: regenerate dependency graph'
+          title: 'docs: regenerate dependency graph'
+          body: 'Auto-generated inter-package dependency visualization.'
+          branch: auto/dep-graph
+          labels: |
+            documentation
+            automated
+          delete-branch: true
