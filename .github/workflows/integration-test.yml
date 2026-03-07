@@ -19,8 +19,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
+
+      - name: Init submodules (public HTTPS)
+        run: |
+          git submodule update --init --recursive --depth 1 || true
 
       - uses: actions/setup-python@v5
         with:
@@ -38,45 +40,22 @@ jobs:
           echo "### 🔗 Cross-Package Import Validation" >> $GITHUB_STEP_SUMMARY
           FAILURES=0
 
-          # Foundation models
-          if uv run python -c "from vindicta_foundation.models.base import VindictaModel; print('✅ vindicta-foundation: VindictaModel')" 2>&1; then
-            echo "- ✅ vindicta-foundation: VindictaModel" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "- ❌ vindicta-foundation: VindictaModel import failed" >> $GITHUB_STEP_SUMMARY
-            FAILURES=$((FAILURES + 1))
-          fi
+          validate_import() {
+            local label="$1"
+            local import_cmd="$2"
+            if uv run python -c "$import_cmd" 2>/dev/null; then
+              echo "- ✅ $label" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "- ❌ $label — import failed" >> $GITHUB_STEP_SUMMARY
+              FAILURES=$((FAILURES + 1))
+            fi
+          }
 
-          # Engine
-          if uv run python -c "from vindicta_engine import dice; print('✅ vindicta-engine: dice module')" 2>&1; then
-            echo "- ✅ vindicta-engine: dice module" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "- ❌ vindicta-engine: dice module import failed" >> $GITHUB_STEP_SUMMARY
-            FAILURES=$((FAILURES + 1))
-          fi
-
-          # Economy
-          if uv run python -c "import vindicta_economy; print('✅ vindicta-economy')" 2>&1; then
-            echo "- ✅ vindicta-economy" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "- ❌ vindicta-economy import failed" >> $GITHUB_STEP_SUMMARY
-            FAILURES=$((FAILURES + 1))
-          fi
-
-          # Oracle
-          if uv run python -c "import vindicta_oracle; print('✅ vindicta-oracle')" 2>&1; then
-            echo "- ✅ vindicta-oracle" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "- ❌ vindicta-oracle import failed" >> $GITHUB_STEP_SUMMARY
-            FAILURES=$((FAILURES + 1))
-          fi
-
-          # Warscribe
-          if uv run python -c "import warscribe_system; print('✅ warscribe-system')" 2>&1; then
-            echo "- ✅ warscribe-system" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "- ❌ warscribe-system import failed" >> $GITHUB_STEP_SUMMARY
-            FAILURES=$((FAILURES + 1))
-          fi
+          validate_import "vindicta-foundation: VindictaModel" "from vindicta_foundation.models.base import VindictaModel"
+          validate_import "vindicta-engine: dice module" "from vindicta_engine import dice"
+          validate_import "vindicta-economy" "import vindicta_economy"
+          validate_import "vindicta-oracle" "import vindicta_oracle"
+          validate_import "warscribe-system" "import warscribe_system"
 
           echo "failures=${FAILURES}" >> $GITHUB_OUTPUT
 
