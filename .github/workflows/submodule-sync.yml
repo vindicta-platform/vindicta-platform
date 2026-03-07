@@ -1,0 +1,80 @@
+name: Submodule Sync
+
+on:
+  repository_dispatch:
+    types: [submodule-updated]
+  workflow_dispatch:
+    inputs:
+      submodule:
+        description: 'Submodule path to update (e.g., packages/vindicta-foundation)'
+        required: true
+        type: choice
+        options:
+          - packages/vindicta-foundation
+          - packages/vindicta-engine
+          - packages/vindicta-economy
+          - packages/vindicta-oracle
+          - packages/warscribe-system
+          - packages/vindicta-agents
+          - features
+          - specs
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    name: Sync Submodule Pointer
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Determine submodule
+        id: sub
+        run: |
+          SUBMODULE="${{ github.event.client_payload.submodule || inputs.submodule }}"
+          if [ -z "$SUBMODULE" ]; then
+            echo "::error::No submodule specified"
+            exit 1
+          fi
+          echo "path=${SUBMODULE}" >> $GITHUB_OUTPUT
+          SAFE_NAME=$(echo "$SUBMODULE" | tr '/' '-')
+          echo "safe_name=${SAFE_NAME}" >> $GITHUB_OUTPUT
+
+      - name: Update submodule to latest
+        run: |
+          git submodule update --remote --merge "${{ steps.sub.outputs.path }}"
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "::notice::Submodule ${{ steps.sub.outputs.path }} is already up to date"
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Pull Request
+        if: steps.changes.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: sync ${{ steps.sub.outputs.path }} submodule pointer"
+          title: "chore: sync ${{ steps.sub.outputs.path }} submodule pointer"
+          body: |
+            ## Automated Submodule Sync
+
+            Updates the submodule pointer for `${{ steps.sub.outputs.path }}` to the latest commit on its `main` branch.
+
+            This PR was created automatically by the Submodule Sync workflow.
+          branch: auto/sync-${{ steps.sub.outputs.safe_name }}
+          labels: |
+            chore
+            automated
+          delete-branch: true
