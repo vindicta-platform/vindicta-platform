@@ -36,6 +36,7 @@
 - [ ] **III. Transparent Decisions**: ADR created for architectural changes?
 - [ ] **IV. Observability & Logging**: Structured logging implemented?
 - [ ] **V. Simplicity (YAGNI)**: No speculative complexity?
+- [ ] **VI. Local-First & Deterministic**: Runs offline? Deterministic play (entropy providence)?
 
 ## Project Structure
 

@@ -4,7 +4,7 @@
 This file defines the foundational mandates for the entire Vindicta Platform workspace. These rules take precedence over general defaults.
 
 ## 1. Project Constitution & Requirements
-- All architectural models, specification generation, implementation rules, and agent workflows MUST adhere to the requirements defined in `docs/constitution.md` and `.specify/memory/constitution.md`.
+- All architectural models, specification generation, implementation rules, and agent workflows MUST adhere to the requirements defined in `.specify/memory/constitution.md`.
 
 ## 2. Structural Integrity & Core Models
 - Every domain model in the platform SHOULD align with the architectural patterns established in `packages/vindicta-foundation`.

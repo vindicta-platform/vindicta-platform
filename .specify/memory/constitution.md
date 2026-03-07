@@ -1,13 +1,13 @@
 <!--
 Sync Impact Report:
-- Version Change: 1.1.0 → 1.1.1
-- Modified Principles: None (Consistency refinement).
+- Version Change: 1.1.1 → 1.2.0
+- Modified Principles: Added Principle VI (Local-First & Deterministic Simulation).
 - Added Sections: None.
 - Removed Sections: None.
 - Templates requiring updates:
-  - .specify/templates/plan-template.md (✅ updated - listed principles in Constitution Check)
-  - .specify/templates/tasks-template.md (✅ updated - made tests mandatory)
-  - .specify/templates/spec-template.md (✅ checked - already requires mandatory testing)
+  - .specify/templates/plan-template.md (✅ updated - added Principle VI to checklist)
+  - .specify/templates/tasks-template.md (✅ checked - no changes needed)
+  - .specify/templates/spec-template.md (✅ checked - no changes needed)
 - Follow-up TODOs: None.
 -->
 
@@ -40,6 +40,11 @@ Reject speculative or "just-in-case" complexity. Implement only what is required
 feature specification. Code that does not directly serve a functional requirement or a mandated
 architectural pattern should be removed.
 
+### VI. Local-First & Deterministic Simulation
+The platform MUST prioritize local-first execution to ensure zero operational cost, offline capability, 
+and player privacy. All simulation outcomes MUST be deterministic and traceable to a centralized 
+entropy provider. Speculative cloud dependencies are rejected for the MVP.
+
 ## Additional Requirements
 
 ### Technology Stack
@@ -71,4 +76,4 @@ This Constitution defines the mandatory requirements for all work within the Vin
 Amendments require a formal proposal and ratification by the platform maintainers. Compliance is
 verified during every feature implementation via the "Constitution Check" gate.
 
-**Version**: 1.1.1 | **Ratified**: 2026-03-06 | **Last Amended**: 2026-03-07
+**Version**: 1.2.0 | **Ratified**: 2026-03-06 | **Last Amended**: 2026-03-07
