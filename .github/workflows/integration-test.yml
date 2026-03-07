@@ -1,0 +1,115 @@
+name: Integration Tests
+
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: integration-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  integration:
+    name: Cross-Package Integration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: astral-sh/setup-uv@v5
+
+      - name: Install all packages
+        run: |
+          uv sync --all-extras 2>/dev/null || uv sync 2>/dev/null || echo "::warning::uv sync failed"
+
+      - name: Validate cross-package imports
+        id: imports
+        run: |
+          echo "### 🔗 Cross-Package Import Validation" >> $GITHUB_STEP_SUMMARY
+          FAILURES=0
+
+          # Foundation models
+          if uv run python -c "from vindicta_foundation.models.base import VindictaModel; print('✅ vindicta-foundation: VindictaModel')" 2>&1; then
+            echo "- ✅ vindicta-foundation: VindictaModel" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ❌ vindicta-foundation: VindictaModel import failed" >> $GITHUB_STEP_SUMMARY
+            FAILURES=$((FAILURES + 1))
+          fi
+
+          # Engine
+          if uv run python -c "from vindicta_engine import dice; print('✅ vindicta-engine: dice module')" 2>&1; then
+            echo "- ✅ vindicta-engine: dice module" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ❌ vindicta-engine: dice module import failed" >> $GITHUB_STEP_SUMMARY
+            FAILURES=$((FAILURES + 1))
+          fi
+
+          # Economy
+          if uv run python -c "import vindicta_economy; print('✅ vindicta-economy')" 2>&1; then
+            echo "- ✅ vindicta-economy" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ❌ vindicta-economy import failed" >> $GITHUB_STEP_SUMMARY
+            FAILURES=$((FAILURES + 1))
+          fi
+
+          # Oracle
+          if uv run python -c "import vindicta_oracle; print('✅ vindicta-oracle')" 2>&1; then
+            echo "- ✅ vindicta-oracle" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ❌ vindicta-oracle import failed" >> $GITHUB_STEP_SUMMARY
+            FAILURES=$((FAILURES + 1))
+          fi
+
+          # Warscribe
+          if uv run python -c "import warscribe_system; print('✅ warscribe-system')" 2>&1; then
+            echo "- ✅ warscribe-system" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ❌ warscribe-system import failed" >> $GITHUB_STEP_SUMMARY
+            FAILURES=$((FAILURES + 1))
+          fi
+
+          echo "failures=${FAILURES}" >> $GITHUB_OUTPUT
+
+      - name: Run BDD features (if available)
+        id: bdd
+        run: |
+          if [ -d "features" ] && find features -name "*.feature" | head -1 | grep -q .; then
+            echo "### 🧬 BDD Integration Results" >> $GITHUB_STEP_SUMMARY
+            uv run behave features/ --format json -o integration_bdd_report.json --no-capture 2>&1 | tail -20 >> $GITHUB_STEP_SUMMARY || true
+          else
+            echo "::notice::No BDD features found for integration testing"
+          fi
+        continue-on-error: true
+
+      - name: Upload integration report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: integration-report
+          path: |
+            integration_bdd_report.json
+          retention-days: 14
+
+      - name: Create issue on failure
+        if: steps.imports.outputs.failures != '0'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const failures = '${{ steps.imports.outputs.failures }}';
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🚨 Integration test failures: ${failures} package(s) broken`,
+              body: `The nightly integration test detected ${failures} cross-package import failure(s).\n\nSee the [workflow run](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}) for details.`,
+              labels: ['bug', 'integration']
+            });
