@@ -25,7 +25,7 @@ This file defines the foundational mandates for the entire Vindicta Platform wor
 - **Linting & Formatting:** All code must pass `ruff check .` AND `ruff format --check .`.
 
 ## 6. Speckit Integration & Workflows
-- Utilize the IDE slash commands defined in `.agent/workflows/` (e.g., `/speckit-plan`, `/speckit-tasks`) for complex tasks like task extraction, planning, and implementation.
+- Utilize the IDE slash commands defined in `.agent/workflows/` (e.g., `/dev-workflow`, `/pr`, `/commit`, `/adl-workflow`).
 - The `speckit-` prefix in `.agent/workflows/` is a **strict namespace** reserved exclusively for Speckit configurations. Other workflows must either be namespace-free or use appropriate custom namespaces.
 
 ## 7. Pull Request & Git Standards
