@@ -20,11 +20,12 @@ venv/
 .DS_Store
 Thumbs.db
 
+# AI Agent Skills
+.agent/
+.agents/
+
 # uv
 uv.lock
-
-# Agent tooling
-.agent/
 
 # pytest
 pytest_cache/
@@ -80,3 +81,7 @@ repomix-*.txt
 repomix-*.xml
 assets/javascripts/
 js/bootstrap
+*.db
+*.sqlite3
+*.sqlite
+.coverage

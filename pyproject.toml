@@ -10,6 +10,7 @@ dependencies = [
     "vindicta-oracle",
     "vindicta-agents",
     "warscribe-system",
+    "mkdocs-material>=9.7.3",
 ]
 
 [tool.uv]

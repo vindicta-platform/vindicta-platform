@@ -27,12 +27,24 @@ theme:
 
 nav:
   - Home: index.md
-  - Engine: https://vindicta-platform.github.io/vindicta-engine/
-  - Foundation: https://vindicta-platform.github.io/vindicta-foundation/
-  - Warscribe: https://vindicta-platform.github.io/warscribe-system/
-  - Economy: https://vindicta-platform.github.io/vindicta-economy/
-  - Oracle: https://vindicta-platform.github.io/vindicta-oracle/
-  - Agents: https://vindicta-platform.github.io/vindicta-agents/
+  - Governance:
+      - Constitution: constitution.md
+  - Architecture:
+      - C4 Model: architecture/c4-model.md
+      - Decision Records:
+          - Index: architecture/adr/index.md
+          - "0000: Record architecture decisions": architecture/adr/0000-record-architecture-decisions.md
+          - "0001: Use Markdown Architectural Decision Records": architecture/adr/0001-use-markdown-architectural-decision-records.md
+  - Development:
+      - Submodule Management: development/submodules.md
+      - BDD Features: development/bdd-features.md
+  - Subsystems:
+    - Engine: https://vindicta-platform.github.io/vindicta-engine/
+    - Foundation: https://vindicta-platform.github.io/vindicta-foundation/
+    - Warscribe: https://vindicta-platform.github.io/warscribe-system/
+    - Economy: https://vindicta-platform.github.io/vindicta-economy/
+    - Oracle: https://vindicta-platform.github.io/vindicta-oracle/
+    - Agents: https://vindicta-platform.github.io/vindicta-agents/
 markdown_extensions:
   - admonition
   - codehilite
