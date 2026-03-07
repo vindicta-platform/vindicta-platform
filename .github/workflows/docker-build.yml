@@ -91,7 +91,8 @@ jobs:
       - name: Image summary
         if: steps.check.outputs.exists == 'true'
         run: |
-          echo '### 🐳 Docker Build' >> $GITHUB_STEP_SUMMARY
-          echo '- **Image:** `ghcr.io/vindicta-platform/${{ matrix.image }}`' >> $GITHUB_STEP_SUMMARY
-          echo '- **Dockerfile:** `${{ matrix.dockerfile }}`' >> $GITHUB_STEP_SUMMARY
-          echo '- **Push:** ${{ github.event_name != 'pull_request' }}' >> $GITHUB_STEP_SUMMARY
+          echo "### 🐳 Docker Build" >> $GITHUB_STEP_SUMMARY
+          echo "- **Image:** \`ghcr.io/vindicta-platform/${{ matrix.image }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Dockerfile:** \`${{ matrix.dockerfile }}\`" >> $GITHUB_STEP_SUMMARY
+          IS_PR=${{ github.event_name == 'pull_request' && 'true' || 'false' }}
+          echo "- **Push:** $([ "$IS_PR" = 'true' ] && echo 'No (PR build)' || echo 'Yes')" >> $GITHUB_STEP_SUMMARY
