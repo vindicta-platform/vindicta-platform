@@ -1,0 +1,119 @@
+name: Cross-Repo Dispatch Relay
+
+on:
+  repository_dispatch:
+    types: [release-published]
+  workflow_dispatch:
+    inputs:
+      source_repo:
+        description: 'Source repository that published a release'
+        required: true
+        type: choice
+        options:
+          - vindicta-foundation
+          - vindicta-engine
+          - vindicta-economy
+          - vindicta-oracle
+          - warscribe-system
+          - Vindicta-Agents
+      tag:
+        description: 'Release tag (e.g., v0.1.0)'
+        required: true
+        type: string
+
+concurrency:
+  group: dispatch-${{ github.event.client_payload.repo || inputs.source_repo }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  relay:
+    name: Process Release Event
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract event info
+        id: info
+        run: |
+          REPO="${{ github.event.client_payload.repo || inputs.source_repo }}"
+          TAG="${{ github.event.client_payload.tag || inputs.tag }}"
+          echo "repo=${REPO}" >> $GITHUB_OUTPUT
+          echo "tag=${TAG}" >> $GITHUB_OUTPUT
+          echo "### 📡 Release Relay" >> $GITHUB_STEP_SUMMARY
+          echo "- **Source:** ${REPO}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Tag:** ${TAG}" >> $GITHUB_STEP_SUMMARY
+
+      - name: Init submodules
+        run: git submodule update --init --recursive --depth 1 || true
+
+      - name: Update submodule to release tag
+        id: update
+        run: |
+          REPO="${{ steps.info.outputs.repo }}"
+          TAG="${{ steps.info.outputs.tag }}"
+
+          # Map repo name to submodule path
+          SUBMOD_MAP=(
+            "vindicta-foundation:packages/vindicta-foundation"
+            "vindicta-engine:packages/vindicta-engine"
+            "vindicta-economy:packages/vindicta-economy"
+            "vindicta-oracle:packages/vindicta-oracle"
+            "warscribe-system:packages/warscribe-system"
+            "Vindicta-Agents:packages/vindicta-agents"
+          )
+
+          SUBMOD_PATH=""
+          for entry in "${SUBMOD_MAP[@]}"; do
+            KEY="${entry%%:*}"
+            VAL="${entry##*:}"
+            if [ "$KEY" = "$REPO" ]; then
+              SUBMOD_PATH="$VAL"
+              break
+            fi
+          done
+
+          if [ -z "$SUBMOD_PATH" ] || [ ! -d "$SUBMOD_PATH" ]; then
+            echo "::warning::No submodule mapping for ${REPO}"
+            echo "changed=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          cd "$SUBMOD_PATH"
+          git fetch --tags origin
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            git checkout "$TAG"
+            cd -
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "submod_path=${SUBMOD_PATH}" >> $GITHUB_OUTPUT
+            echo "✅ Updated ${SUBMOD_PATH} to ${TAG}" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "::warning::Tag ${TAG} not found in ${REPO}"
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create PR for submodule update
+        if: steps.update.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: bump ${{ steps.info.outputs.repo }} to ${{ steps.info.outputs.tag }}"
+          title: "chore: bump ${{ steps.info.outputs.repo }} to ${{ steps.info.outputs.tag }}"
+          body: |
+            ## Release Relay
+
+            Automatically updates the `${{ steps.update.outputs.submod_path }}` submodule
+            to the `${{ steps.info.outputs.tag }}` release tag.
+
+            Triggered by a release event from `${{ steps.info.outputs.repo }}`.
+          branch: auto/release-${{ steps.info.outputs.repo }}-${{ steps.info.outputs.tag }}
+          labels: |
+            chore
+            automated
+          delete-branch: true

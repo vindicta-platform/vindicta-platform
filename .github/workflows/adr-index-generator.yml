@@ -1,0 +1,82 @@
+name: ADR Index Generator
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/architecture/adr/**'
+  workflow_dispatch:
+
+concurrency:
+  group: adr-index-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  generate:
+    name: Regenerate ADR Index
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate ADR INDEX.md
+        run: |
+          ADR_DIR="docs/architecture/adr"
+          INDEX="${ADR_DIR}/INDEX.md"
+
+          if [ ! -d "$ADR_DIR" ]; then
+            echo "::notice::No ADR directory found"
+            exit 0
+          fi
+
+          echo "# Architecture Decision Records" > "$INDEX"
+          echo "" >> "$INDEX"
+          echo "_Auto-generated index of all ADRs. Do not edit manually._" >> "$INDEX"
+          echo "" >> "$INDEX"
+          echo "| # | Title | Status | Date |" >> "$INDEX"
+          echo "|---|-------|--------|------|" >> "$INDEX"
+
+          for adr in $(find "$ADR_DIR" -name '*.md' -not -name 'INDEX.md' -not -name '_*' | sort); do
+            FILENAME=$(basename "$adr")
+            # Extract number from filename (e.g., 0006-foo.md -> 0006)
+            NUM=$(echo "$FILENAME" | grep -oE '^[0-9]+' || echo '?')
+
+            # Extract title from first H1 or H2
+            TITLE=$(head -5 "$adr" | grep -E '^#' | head -1 | sed 's/^#* //')
+            [ -z "$TITLE" ] && TITLE="$FILENAME"
+
+            # Extract status (look for Status: line)
+            STATUS=$(grep -iE '^\*?\*?status\*?\*?:' "$adr" | head -1 | sed 's/.*: *//' | tr -d '\r')
+            [ -z "$STATUS" ] && STATUS="-"
+
+            # Extract date from filename or git
+            DATE=$(git log --format='%as' --diff-filter=A -- "$adr" 2>/dev/null | head -1)
+            [ -z "$DATE" ] && DATE="-"
+
+            echo "| ${NUM} | [${TITLE}](${FILENAME}) | ${STATUS} | ${DATE} |" >> "$INDEX"
+          done
+
+          echo "" >> "$INDEX"
+          echo "---" >> "$INDEX"
+          echo "" >> "$INDEX"
+          ADR_COUNT=$(find "$ADR_DIR" -name '*.md' -not -name 'INDEX.md' -not -name '_*' | wc -l)
+          echo "**Total ADRs:** ${ADR_COUNT}" >> "$INDEX"
+
+          echo '### 📝 ADR Index Generated' >> $GITHUB_STEP_SUMMARY
+          cat "$INDEX" >> $GITHUB_STEP_SUMMARY
+
+      - name: Create PR if changed
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'docs: regenerate ADR INDEX.md'
+          title: 'docs: regenerate ADR INDEX.md'
+          body: 'Auto-generated ADR index update after ADR changes.'
+          branch: auto/adr-index
+          labels: |
+            documentation
+            automated
+          delete-branch: true
