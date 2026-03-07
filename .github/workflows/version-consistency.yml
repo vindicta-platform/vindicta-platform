@@ -1,0 +1,86 @@
+name: Version Consistency Checker
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'packages/*/pyproject.toml'
+  schedule:
+    - cron: '0 6 * * 3'
+  workflow_dispatch:
+
+concurrency:
+  group: version-check-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    name: Cross-Package Version Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Init submodules
+        run: git submodule update --init --recursive --depth 1 || true
+
+      - name: Check version consistency
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const { execSync } = require('child_process');
+
+            let report = '### \ud83d\udccb Version Consistency Report\n\n';
+            report += '| Package | Version | Python Requires | Has Tests | Has Docs |\n';
+            report += '|---------|---------|:---------------:|:---------:|:--------:|\n';
+
+            const issues = [];
+            const packagesDir = 'packages';
+            if (!fs.existsSync(packagesDir)) {
+              core.notice('No packages directory found');
+              return;
+            }
+
+            const packages = fs.readdirSync(packagesDir).filter(d =>
+              fs.statSync(path.join(packagesDir, d)).isDirectory()
+            );
+
+            for (const pkg of packages) {
+              const pyproject = path.join(packagesDir, pkg, 'pyproject.toml');
+              if (!fs.existsSync(pyproject)) continue;
+
+              const content = fs.readFileSync(pyproject, 'utf8');
+              const versionMatch = content.match(/^version\s*=\s*"([^"]+)"/m);
+              const pythonMatch = content.match(/requires-python\s*=\s*"([^"]+)"/m);
+              const version = versionMatch ? versionMatch[1] : '?';
+              const python = pythonMatch ? pythonMatch[1] : '?';
+
+              const hasTests = fs.existsSync(path.join(packagesDir, pkg, 'tests')) ? '\u2705' : '\u274c';
+              const hasDocs = fs.existsSync(path.join(packagesDir, pkg, 'docs')) ||
+                             fs.existsSync(path.join(packagesDir, pkg, 'README.md')) ? '\u2705' : '\u274c';
+
+              report += `| ${pkg} | ${version} | ${python} | ${hasTests} | ${hasDocs} |\n`;
+
+              // Semver check
+              if (!/^\d+\.\d+\.\d+/.test(version)) {
+                issues.push(`${pkg}: version \`${version}\` does not follow semver`);
+              }
+              if (hasTests === '\u274c') {
+                issues.push(`${pkg}: missing \`tests/\` directory`);
+              }
+            }
+
+            if (issues.length > 0) {
+              report += '\n**Issues Found:**\n';
+              issues.forEach(i => report += `- \u26a0\ufe0f ${i}\n`);
+            } else {
+              report += '\n\u2705 All packages consistent\n';
+            }
+
+            core.summary.addRaw(report);
+            await core.summary.write();
