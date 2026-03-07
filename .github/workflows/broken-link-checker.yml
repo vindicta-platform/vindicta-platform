@@ -1,0 +1,102 @@
+name: Broken Link Checker
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - '**/*.md'
+  schedule:
+    - cron: '0 5 * * 3'
+  workflow_dispatch:
+
+concurrency:
+  group: link-check-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    name: Check Documentation Links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Init submodules
+        run: git submodule update --init --recursive --depth 1 || true
+
+      - name: Check external links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: >
+            --verbose
+            --no-progress
+            --accept 100..399
+            --exclude-mail
+            --exclude 'localhost'
+            --exclude '127.0.0.1'
+            --exclude 'example.com'
+            --exclude 'github.com/vindicta-platform/.*/pull'
+            --exclude 'github.com/vindicta-platform/.*/issues'
+            --timeout 30
+            --max-retries 2
+            --max-concurrency 5
+            'docs/**/*.md'
+            'README.md'
+            'CONTRIBUTING.md'
+            'packages/*/README.md'
+          output: link-check-report.md
+          fail: false
+
+      - name: Post summary
+        if: always()
+        run: |
+          echo '### 🔗 Link Check Report' >> $GITHUB_STEP_SUMMARY
+          if [ -f link-check-report.md ]; then
+            cat link-check-report.md >> $GITHUB_STEP_SUMMARY
+          else
+            echo '✅ No broken links found' >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Create issue on broken links
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            if (!fs.existsSync('link-check-report.md')) return;
+            const report = fs.readFileSync('link-check-report.md', 'utf8');
+            if (!report.includes('Errors')) return;
+
+            // Close previous link-check issues
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner, repo: context.repo.repo,
+              labels: 'documentation,automated', state: 'open'
+            });
+            for (const issue of issues) {
+              if (issue.title.includes('Broken Link')) {
+                await github.rest.issues.update({
+                  owner: context.repo.owner, repo: context.repo.repo,
+                  issue_number: issue.number, state: 'closed',
+                  state_reason: 'not_planned'
+                });
+              }
+            }
+
+            await github.rest.issues.create({
+              owner: context.repo.owner, repo: context.repo.repo,
+              title: `🔗 Broken Links Detected — ${new Date().toISOString().slice(0, 10)}`,
+              body: `## Broken Link Report\n\n${report.slice(0, 60000)}`,
+              labels: ['documentation', 'automated']
+            });
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: link-check-report
+          path: link-check-report.md
+          retention-days: 14
