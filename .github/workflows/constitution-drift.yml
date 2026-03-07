@@ -1,0 +1,70 @@
+name: Constitution Drift Check
+
+on:
+  pull_request:
+    paths:
+      - 'docs/**'
+      - 'packages/*/src/**'
+      - '.specify/**'
+  schedule:
+    - cron: '0 8 * * 0'
+  workflow_dispatch:
+
+concurrency:
+  group: drift-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  drift:
+    name: Constitution & ADR Compliance
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: astral-sh/setup-uv@v5
+
+      - name: Install dependencies
+        run: uv sync --all-extras 2>/dev/null || uv sync 2>/dev/null || true
+
+      - name: Run constitution drift check
+        id: drift
+        run: |
+          echo "### 📜 Constitution Drift Report" >> $GITHUB_STEP_SUMMARY
+          python scripts/constitution_drift_check.py 2>&1 | tee drift_report.txt
+          if grep -q 'VIOLATION' drift_report.txt 2>/dev/null; then
+            echo "violations=true" >> $GITHUB_OUTPUT
+            echo "::warning::Constitution violations detected"
+          else
+            echo "violations=false" >> $GITHUB_OUTPUT
+            echo "✅ All checks passed" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Post drift report to PR
+        if: github.event_name == 'pull_request' && steps.drift.outputs.violations == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const report = require('fs').readFileSync('drift_report.txt', 'utf8');
+            const body = `## 📜 Constitution Drift Report\n\n\`\`\`\n${report.slice(-4000)}\n\`\`\`\n\nPlease address the violations before merging.`;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner, repo: context.repo.repo,
+              issue_number: context.issue.number, body
+            });
+
+      - name: Upload drift report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: drift-report
+          path: drift_report.txt
+          retention-days: 30
